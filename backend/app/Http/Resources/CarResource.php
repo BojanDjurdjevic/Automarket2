@@ -61,7 +61,8 @@ class CarResource extends JsonResource
 
             'images' => $this->images->map(fn($img) => [
                 'id' => $img->id,
-                'url' => Storage::url($img->image_path),
+                'url' => asset('storage/' . $img->image_path),
+                'is_primary' => (bool) $img->is_primary,
             ]),
             /*
             'owner' => [

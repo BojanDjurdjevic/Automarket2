@@ -10,9 +10,7 @@ export function CarCard(car: any): HTMLElement {
     border border-gray-100
   `;
 
-  const image =
-    car.images?.[0]?.path ||
-    'https://placehold.co/600x400?text=No+Image';
+  const image = car.image || 'https://placehold.co/600x400?text=No+Image';
 
   card.innerHTML = `
     

@@ -19,6 +19,7 @@ class CarSearchService
                 'transmission',
                 'features',
                 'images',
+                'primaryImage',
                 'user'
             ]);
 

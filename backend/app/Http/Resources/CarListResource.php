@@ -21,9 +21,9 @@ class CarListResource extends JsonResource
             'make' => $this->make?->name,
             'model' => $this->model?->name,
 
-            'image' => $this->images->first()
-                ? Storage::url($this->images->first()->image_path)
-                : null,
+            'image' => $this->primaryImage
+            ? asset('storage/' . $this->primaryImage->image_path)
+            : null,
             
             'user_id' => $this->user_id,
 
