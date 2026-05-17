@@ -4,6 +4,7 @@ import { authStore } from '../store/auth.store';
 import { Toast } from '../utils/toast.ts';
 import { confirmModal } from '../ui/components/ConfirmModal.ts';
 import { CarCard } from '../ui/components/CarCard';
+import { ImageCarousel } from '../ui/components/ImageCarousel.ts';
 
 export async function CarShowPage(
   params?: Record<string, string>
@@ -22,21 +23,16 @@ export async function CarShowPage(
     const car = await carService.getOne(
       Number(params?.id)
     );
-
+    /*
     const image =
       car.images?.[0]?.path ||
-      'https://placehold.co/1200x700?text=No+Image';
+      'https://placehold.co/1200x700?text=No+Image'; */
 
     wrapper.innerHTML = `
       <div class="space-y-6">
 
         <!-- IMAGE -->
-        <div class="bg-white rounded-xl shadow overflow-hidden">
-          <img
-            src="${image}"
-            class="w-full h-[420px] object-cover"
-          />
-        </div>
+        <div id="carousel"></div>
 
         <!-- HEADER -->
         <div class="bg-white rounded-xl shadow p-6">
@@ -157,6 +153,13 @@ export async function CarShowPage(
 
       </div>
     `;
+
+    const carouselContainer =
+      wrapper.querySelector('#carousel')!;
+
+    carouselContainer.appendChild(
+      ImageCarousel(car.images || [])
+    );
 
     // OWNER ACTIONS
     const actions =
