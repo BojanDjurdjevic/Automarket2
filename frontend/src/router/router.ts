@@ -79,6 +79,21 @@ export class Router {
         return;
       }
 
+      //email-verify check:
+
+      if (
+        authStore.isAuthenticated &&
+        authStore.user &&
+        !authStore.user.email_verified_at
+      ) {
+        const isAllowed = path === '/verify-email' ||  path === '/verify-success' ||  path.startsWith('/email-check');
+
+        if (!isAllowed) {
+          this.navigate('/verify-email');
+          return;
+        }
+      } 
+
       const page = await route.component(params)
 
       if (path === '/login') {

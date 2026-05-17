@@ -2,6 +2,7 @@ type User = {
     id: number,
     name: string,
     email: string,
+    email_verified_at: boolean,
     phone: string | null,
     city: string | null,
     avatar: string | null
@@ -20,6 +21,10 @@ class AuthStore {
 
     get userId() {
         return this.user?.id;
+    }
+
+    isVerified(): boolean {
+        return !!this.user?.email_verified_at;
     }
 }
 

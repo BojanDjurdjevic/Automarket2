@@ -18,9 +18,10 @@ Route::get('/makes/{make}/models', [CarMakeController::class, 'models']);
 Route::get('/users/{user}/cars', [CarController::class, 'userCars']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
+    /*
     Route::get('/user', function (Request $request) {
         return $request->user();
-    });
+    }); */
 
     Route::apiResource('/cars', CarController::class)->except(['index', 'show']);
 
@@ -33,4 +34,4 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::delete('/cars/{car}/images/{image}', [CarImageController::class,'destroy']);
 });
 
-require __DIR__.'/auth.php';
+//require __DIR__.'/auth.php';

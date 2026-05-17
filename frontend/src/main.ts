@@ -9,6 +9,9 @@ import { CarFormPage } from './pages/car-form';
 import { MyCarsPage } from './pages/mycars';
 import { CarShowPage } from './pages/car-show';
 import { RegisterPage } from './pages/register';
+import { VerifyEmailPage } from './pages/verifyemail';
+import { VerifySuccessPage } from './pages/verifysuccess';
+import { EmailCheckPage } from './pages/emailcheck';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -52,6 +55,21 @@ router.register({
   path: '/cars/:id',
   component: CarShowPage
 }); 
+
+router.register({
+  path: '/verify-email',
+  component: VerifyEmailPage
+});
+
+router.register({
+  path: '/verify-success',
+  component: VerifySuccessPage
+});
+
+router.register({
+  path: '/email-check',
+  component: EmailCheckPage,
+});
 
 
 initApp();
