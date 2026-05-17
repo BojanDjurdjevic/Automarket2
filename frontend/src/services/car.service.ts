@@ -22,7 +22,10 @@ export const carService = {
   },
 
   async update(id: number, data: FormData) {
-    const res = await api.put(`/api/cars/${id}`, data);
+    data.append('_method', 'PUT');
+    console.log(data instanceof FormData);
+    console.log([...data.entries()]);
+    const res = await api.post(`/api/cars/${id}`, data);
     return res.data.data;
   },
 
@@ -30,9 +33,9 @@ export const carService = {
     await api.delete(`/api/cars/${id}`);
   },
 
-  async deleteImage(imageId: number) {
+  async deleteImage(carId: number, imageId: number) {
     await api.delete(
-      `/api/car-images/${imageId}`
+      `/api/cars/${carId}/images/${imageId}`
     );
   },
 

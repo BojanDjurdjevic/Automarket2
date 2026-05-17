@@ -127,6 +127,8 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
     const imagePreview = document.createElement('div');
 
     const existingImages = document.createElement('div');
+
+    let selectedFiles: File[] = [];
     
     imageInput.type = 'file';
     imageInput.multiple = true;
@@ -136,12 +138,49 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
     imagePreview.className = 'grid grid-cols-2 md:grid-cols-3 gap-3 mt-3';
     existingImages.className = 'grid grid-cols-2 md:grid-cols-3 gap-3 mb-4';
 
+    function renderPreview() {
+      imagePreview.innerHTML = '';
+
+      selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'relative rounded overflow-hidden border bg-gray-100';
+
+          const img = document.createElement('img');
+          img.src = e.target?.result as string;
+          img.className = 'w-full h-32 object-cover';
+
+          // RM btn
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = '×';
+          removeBtn.className =
+            'absolute top-2 right-2 bg-red-600 text-white w-6 h-6 rounded-full';
+
+          removeBtn.onclick = () => {
+            selectedFiles.splice(index, 1);
+            renderPreview();
+          };
+
+          wrapper.appendChild(img);
+          wrapper.appendChild(removeBtn);
+
+          imagePreview.appendChild(wrapper);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    }
+
     imageInput.addEventListener('change', () => {
 
       imagePreview.innerHTML = '';
 
       if (!imageInput.files) return;
 
+      selectedFiles = Array.from(imageInput.files);
+      /*
       Array.from(imageInput.files).forEach(file => {
 
         const reader = new FileReader();
@@ -166,7 +205,9 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
         };
 
         reader.readAsDataURL(file);
-      });
+      }); */
+
+      renderPreview();
     });
 
     const btn = document.createElement('button');
@@ -310,7 +351,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
             try {
 
-              await carService.deleteImage(img.id);
+              await carService.deleteImage(car.id, img.id);
 
               wrapper.remove();
 
@@ -412,13 +453,15 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
       });
 
       // IMAGES
-
+      selectedFiles.forEach(file => {
+        formData.append('images[]', file);
+      });
+      /*
       if (imageInput.files) {
-
         Array.from(imageInput.files).forEach(file => {
           formData.append('images[]', file);
         });
-      }
+      } */
 
       showLoading();
 

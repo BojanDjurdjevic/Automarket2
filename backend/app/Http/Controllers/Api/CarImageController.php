@@ -19,7 +19,7 @@ class CarImageController
 
    public function store(StoreCarImageRequest $request, Car $car) 
     {
-        Gate::authorize('create', Car::class);
+        Gate::authorize('create', $car);
 
         $this->imageService->addImages($car, $request->file('images'));
 
@@ -55,7 +55,7 @@ class CarImageController
 
     public function destroy(Car $car, CarImage $image)
     {
-        Gate::authorize('delete', Car::class);
+        Gate::authorize('delete', $car);
 
         $this->imageService->deleteImage($car, $image);
 

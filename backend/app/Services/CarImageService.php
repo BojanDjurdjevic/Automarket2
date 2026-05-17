@@ -9,6 +9,7 @@ use App\Models\CarImage;
 
 use App\Traits\HandlesImageUpload;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CarImageService
 {
@@ -41,33 +42,53 @@ class CarImageService
       );
    }
 
-      public function deleteImage(Car $car, CarImage $image, ?string $path = ''): void
-      {
-         if($image->car_id !== $car->id) {
-            abort(404);
-         }
+   public function setPrimary(Car $car, CarImage $image): void
+   {
+      DB::transaction(function () use ($car, $image) {
 
-         DB::transaction(function() use($car, $image, $path) {
-            $wasPrimary =$image->is_primary;
+         // reset all
+         $car->images()->update([
+               'is_primary' => false
+         ]);
 
-            $path = $image->image_path;
+         // set new primary
+         $image->update([
+               'is_primary' => true
+         ]);
+      });
+   }
 
-            $image->delete();
-
-            if($wasPrimary) {
-               $next = $car->images()->orderBy('sort_order')->first();
-
-               if($next) {
-                  $next->update([
-                     'is_primary'=>true
-                  ]);
-               }
-            }
-
-         });
-
-         $this->deleteImageFile(
-            $path
-         );
+   public function deleteImage(Car $car, CarImage $image, ?string $path = ''): void
+   {
+      if($image->car_id !== $car->id) {
+         abort(404);
       }
+
+      DB::transaction(function() use($car, $image, $path) {
+         $wasPrimary =$image->is_primary;
+
+         $path = $image->image_path;
+
+         $image->delete();
+
+         Storage::disk('public')->delete($path);
+
+         if ($wasPrimary) {
+            $newPrimary = $car->images()
+                ->orderBy('sort_order')
+                ->first();
+
+            if ($newPrimary) {
+                $newPrimary->update([
+                    'is_primary' => true
+                ]);
+            }
+        }
+
+      });
+
+      $this->deleteImageFile(
+         $path
+      );
+   }
 }
