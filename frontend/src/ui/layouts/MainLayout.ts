@@ -15,17 +15,27 @@ export function MainLayout(content: HTMLElement): HTMLElement {
           AutoMarket
         </div>
 
-        <a href="#" id="nav-cars"
-          class="text-gray-700 hover:text-black">
-          Cars
-        </a>
+        <div class="flex items-center gap-4">
 
-        <a href="#" id="nav-my-cars"
-          class="text-gray-700 hover:text-black">
-          My Cars
-        </a>
+          <a href="#" id="nav-cars"
+            class="text-gray-700 hover:text-black">
+            Cars
+          </a>
+
+          <a href="#" id="nav-my-cars"
+            class="text-gray-700 hover:text-black">
+            My Cars
+          </a>
+
+          <a href="#" id="nav-profile"
+            class="text-gray-700 hover:text-black">
+            Profile
+          </a>
+
+        </div>
 
         <div class="flex items-center gap-4">
+
           <span class="text-gray-600">
             ${authStore.user?.name ?? ''}
           </span>
@@ -39,13 +49,17 @@ export function MainLayout(content: HTMLElement): HTMLElement {
             class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded">
             Logout
           </button>
+
         </div>
+
       </nav>
 
       <!-- Content -->
       <main class="p-6 max-w-5xl mx-auto" id="app-content"></main>
     </div>
   `;
+
+  const profileLink = wrapper.querySelector('#nav-profile') as HTMLElement;
 
   const logoutBtn = wrapper.querySelector('#logout-btn') as HTMLButtonElement;
   const loginBtn = wrapper.querySelector('#login-btn') as HTMLButtonElement;
@@ -61,7 +75,9 @@ export function MainLayout(content: HTMLElement): HTMLElement {
 
   //carsPage:
 
-  wrapper.querySelector('#nav-cars')!
+  const carsLink = wrapper.querySelector('#nav-cars') as HTMLElement;
+  
+  carsLink!
   .addEventListener('click', (e) => {
     e.preventDefault();
     router.navigate('/cars');
@@ -70,12 +86,19 @@ export function MainLayout(content: HTMLElement): HTMLElement {
   //my-cars:
 
   const myCarsLink = wrapper.querySelector('#nav-my-cars') as HTMLElement;
-  const carsLink = wrapper.querySelector('#nav-cars') as HTMLElement;
+ 
 
   if (!authStore.isAuthenticated) {
     myCarsLink.style.display = 'none';
-    carsLink.style.display = 'none';
+    profileLink.style.display = 'none';
   }
+
+  wrapper.querySelector('#nav-profile')!
+  .addEventListener('click', (e) => {
+    e.preventDefault();
+
+    router.navigate('/profile');
+  });
 
   wrapper.querySelector('#nav-my-cars')!
   .addEventListener('click', (e) => {

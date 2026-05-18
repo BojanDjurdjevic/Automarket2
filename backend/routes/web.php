@@ -29,6 +29,17 @@ Route::get(
     VerifyEmailController::class
 )->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
 
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/profile', function (Request $request) {
+        return response()->json(
+            $request->user()
+        );
+    });
+
+});
+
 /*
 Route::middleware('auth:sanctum')->group(function () {
 

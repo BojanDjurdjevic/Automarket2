@@ -12,6 +12,7 @@ import { RegisterPage } from './pages/register';
 import { VerifyEmailPage } from './pages/verifyemail';
 import { VerifySuccessPage } from './pages/verifysuccess';
 import { EmailCheckPage } from './pages/emailcheck';
+import { ProfilePage } from './pages/profile';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -55,6 +56,14 @@ router.register({
   path: '/cars/:id',
   component: CarShowPage
 }); 
+
+// User profile things:
+
+router.register({
+  path: '/profile',
+  component: ProfilePage,
+  meta: { auth: true }
+});
 
 router.register({
   path: '/verify-email',

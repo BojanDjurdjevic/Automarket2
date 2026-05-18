@@ -21,6 +21,7 @@ return [
         'register',
         'logout',
         'user',
+        'profile',
 
         'verify-email/*',
 
