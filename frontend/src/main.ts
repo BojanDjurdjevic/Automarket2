@@ -14,6 +14,8 @@ import { VerifySuccessPage } from './pages/verifysuccess';
 import { EmailCheckPage } from './pages/emailcheck';
 import { ProfilePage } from './pages/profile';
 import { ProfileEditPage } from './pages/profile-edit';
+import { ProfilePasswordPage } from './pages/profile-password';
+import { ProfileDeletePage } from './pages/profile-delete';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -86,6 +88,20 @@ router.register({
 router.register({
   path: '/profile/edit',
   component: ProfileEditPage,
+  meta: { auth: true }
+});
+
+router.register({
+  path: '/profile/password',
+  component: ProfilePasswordPage,
+  meta: { auth: true }
+});
+
+//DELETE acc:
+
+router.register({
+  path: '/profile/delete',
+  component: ProfileDeletePage,
   meta: { auth: true }
 });
 

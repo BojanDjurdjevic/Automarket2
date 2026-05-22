@@ -3,7 +3,11 @@
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
+
 /*
 Route::get('/debug-user', function (\Illuminate\Http\Request $request) {
     return [
@@ -50,6 +54,57 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json([
             'message' => 'Profile updated',
             'user' => $request->user(),
+        ]);
+    });
+
+    Route::put('/profile/password', function (Request $request) {
+        $data = $request->validate([
+            'current_password' => ['required'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        if (!Hash::check(
+            $data['current_password'],
+            $request->user()->password
+        )) {
+
+            throw ValidationException::withMessages([
+                'current_password' => [
+                    'Current password is incorrect.'
+                ]
+            ]);
+        }
+
+        $request->user()->update([
+            'password' => bcrypt($data['password'])
+        ]);
+
+        return response()->json([
+            'message' => 'Password updated'
+        ]);
+    });
+
+    //DELETE user account, all cars and imgs:
+    Route::delete('/profile', function (Request $request) {
+        $user = $request->user();
+
+        foreach ($user->cars as $car) {
+            app(\App\Services\CarImageService::class)
+                ->deleteAllImages($car);
+
+            $car->delete();
+        }
+
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'message' => 'Account deleted'
         ]);
     });
 });

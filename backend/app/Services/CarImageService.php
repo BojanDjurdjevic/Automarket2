@@ -91,4 +91,25 @@ class CarImageService
          $path
       );
    }
+
+   public function deleteAllImages(Car $car): void
+   {
+      foreach ($car->images as $image) {
+
+         if (
+               $image->path &&
+               Storage::disk('public')->exists($image->path)
+         ) {
+               Storage::disk('public')->delete(
+                  $image->path
+               );
+         }
+
+         $image->delete();
+      }
+
+      Storage::disk('public')->deleteDirectory(
+         "cars/{$car->id}"
+      );
+   }
 }
