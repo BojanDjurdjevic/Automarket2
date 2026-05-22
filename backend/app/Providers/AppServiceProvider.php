@@ -48,10 +48,16 @@ class AppServiceProvider extends ServiceProvider
                 ->line('Click below to verify your email.')
                 ->action('Verify Email', $spaUrl);
         });
-
+        /*
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
-        });
+        }); */
+
+        ResetPassword::createUrlUsing(function (object $user, string $token) {
+                return env('FRONTEND_URL')
+                    . "/reset-password/{$token}?email={$user->email}";
+            }
+        );
 
         Gate::policy(Car::class, CarPolicy::class);
     }

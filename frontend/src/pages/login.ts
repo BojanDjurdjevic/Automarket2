@@ -29,6 +29,13 @@ export function LoginPage(): HTMLElement {
             Register
           </a>
         </p>
+
+        <p class="text-sm mt-3 text-center">
+          Forgot Password?
+          <a href="/forgot-password" id="forgotPassLink" class="text-red-500">
+            Password reset
+          </a>
+        </p>
       </div>
 
       

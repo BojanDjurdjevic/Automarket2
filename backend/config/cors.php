@@ -27,6 +27,8 @@ return [
 
         'email/verify/*',
         'email/verification-notification',
+        'forgot-password',
+        'reset-password',
 
         'sanctum/csrf-cookie',
     ], // '*'
