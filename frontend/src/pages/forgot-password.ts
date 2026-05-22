@@ -1,0 +1,56 @@
+import { api } from '../api/axios';
+import { Toast } from '../utils/toast';
+
+export function ForgotPasswordPage(): HTMLElement {
+
+  const wrapper = document.createElement('div');
+
+  wrapper.className =
+    'max-w-md mx-auto mt-20';
+
+  wrapper.innerHTML = `
+
+    <div class="bg-white shadow rounded-xl p-6">
+
+      <h1 class="text-2xl font-bold mb-4">
+        Forgot Password
+      </h1>
+
+      <p class="text-gray-600 mb-6">
+        Enter your email to receive a password reset link.
+      </p>
+
+      <input
+        id="email"
+        type="email"
+        placeholder="Email"
+        class="w-full border rounded p-2 mb-4"
+      />
+
+      <button
+        id="send"
+        class="w-full bg-blue-500 text-white py-2 rounded"
+      >
+        Send Reset Link
+      </button>
+
+    </div>
+  `;
+
+    wrapper.querySelector('#send')!.addEventListener('click', async () => {
+        try {
+
+            const email = (wrapper.querySelector('#email') as HTMLInputElement).value;
+
+            await api.post('/forgot-password', {email});
+
+            Toast.success('Reset email sent');
+
+        } catch {
+
+            Toast.error('Failed to send reset email');
+        }
+    });
+
+  return wrapper;
+}

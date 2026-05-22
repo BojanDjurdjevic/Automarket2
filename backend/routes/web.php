@@ -95,10 +95,11 @@ Route::middleware('auth:sanctum')->group(function () {
             $car->delete();
         }
 
-        Auth::logout();
-
         $user->delete();
 
+        //Auth::logout();
+        auth()->guard('web')->logout();
+        
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();

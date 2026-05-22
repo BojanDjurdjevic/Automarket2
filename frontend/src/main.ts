@@ -16,6 +16,8 @@ import { ProfilePage } from './pages/profile';
 import { ProfileEditPage } from './pages/profile-edit';
 import { ProfilePasswordPage } from './pages/profile-password';
 import { ProfileDeletePage } from './pages/profile-delete';
+import { ForgotPasswordPage } from './pages/forgot-password';
+import { ResetPasswordPage } from './pages/reset-password';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -103,6 +105,18 @@ router.register({
   path: '/profile/delete',
   component: ProfileDeletePage,
   meta: { auth: true }
+});
+
+// PASS Reset:
+
+router.register({
+  path: '/forgot-password',
+  component: ForgotPasswordPage
+});
+
+router.register({
+  path: '/reset-password/:token',
+  component: ResetPasswordPage
 });
 
 
