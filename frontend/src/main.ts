@@ -13,6 +13,7 @@ import { VerifyEmailPage } from './pages/verifyemail';
 import { VerifySuccessPage } from './pages/verifysuccess';
 import { EmailCheckPage } from './pages/emailcheck';
 import { ProfilePage } from './pages/profile';
+import { ProfileEditPage } from './pages/profile-edit';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -78,6 +79,14 @@ router.register({
 router.register({
   path: '/email-check',
   component: EmailCheckPage,
+});
+
+// EDIT user profile:
+
+router.register({
+  path: '/profile/edit',
+  component: ProfileEditPage,
+  meta: { auth: true }
 });
 
 

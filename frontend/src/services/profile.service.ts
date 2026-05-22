@@ -6,6 +6,13 @@ export const profileService = {
     const res = await api.get('/profile');
 
     return res.data;
+  },
+
+  async update(data: any) {
+
+    const res = await api.put('/profile', data);
+
+    return res.data;
   }
 
 };

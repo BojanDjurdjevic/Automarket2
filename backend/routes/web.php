@@ -4,14 +4,14 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+/*
 Route::get('/debug-user', function (\Illuminate\Http\Request $request) {
     return [
         'user' => $request->user(),
         'auth_check' => auth()->check(),
         'session_id' => session()->getId(),
     ];
-});
+}); */
 
 Route::get('/', function () {
     return response()->json([
@@ -20,17 +20,17 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::get(
-    '/verify-email/{id}/{hash}',
-    VerifyEmailController::class
-)->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
-
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });//->middleware('auth:sanctum');
+
+    Route::get(
+        '/verify-email/{id}/{hash}',
+        VerifyEmailController::class
+    )->middleware(['signed'])->name('verification.verify');
 
     Route::get('/profile', function (Request $request) {
         return response()->json(
@@ -38,6 +38,20 @@ Route::middleware('auth:sanctum')->group(function () {
         );
     });
 
+    Route::put('/profile', function (Request $request) {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $request->user()->update($data);
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'user' => $request->user(),
+        ]);
+    });
 });
 
 /*
