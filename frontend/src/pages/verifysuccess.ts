@@ -3,14 +3,14 @@ import { router } from '../main';
 export function VerifySuccessPage(): HTMLElement {
   const wrapper = document.createElement('div');
 
-  wrapper.className = 'text-center mt-20';
+  wrapper.className = 'text-center mt-20  dark:bg-gray-800 dark:text-gray-100';
 
   wrapper.innerHTML = `
     <h1 class="text-3xl font-bold text-green-600 mb-4">
       Email verified!
     </h1>
 
-    <p class="text-gray-600 mb-6">
+    <p class="text-gray-600 mb-6 dark:text-gray-100">
       You can now continue using the app.
     </p>
 

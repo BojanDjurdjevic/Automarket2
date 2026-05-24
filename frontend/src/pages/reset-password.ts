@@ -13,7 +13,7 @@ export function ResetPasswordPage(
 
   wrapper.innerHTML = `
 
-    <div class="bg-white shadow rounded-xl p-6">
+    <div class="bg-white shadow rounded-xl p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-2xl font-bold mb-6">
         Reset Password
@@ -35,7 +35,7 @@ export function ResetPasswordPage(
 
       <button
         id="reset"
-        class="w-full bg-blue-500 text-white py-2 rounded"
+        class="w-full bg-indigo-600 text-white py-2 rounded"
       >
         Reset Password
       </button>

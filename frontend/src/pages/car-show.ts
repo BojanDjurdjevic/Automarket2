@@ -13,7 +13,7 @@ export async function CarShowPage(
   const wrapper = document.createElement('div');
 
   wrapper.innerHTML = `
-    <div class="text-center py-20">
+    <div class="text-center py-20  dark:bg-gray-800 dark:text-gray-100">
       Loading...
     </div>
   `;
@@ -35,7 +35,7 @@ export async function CarShowPage(
         <div id="carousel"></div>
 
         <!-- HEADER -->
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
           <div class="flex justify-between items-start gap-4">
 
@@ -61,13 +61,13 @@ export async function CarShowPage(
         </div>
 
         <!-- DETAILS -->
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
           <h2 class="text-xl font-semibold mb-4">
             Vehicle Details
           </h2>
 
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 ">
 
             ${detailItem('Make', car.make?.name)}
             ${detailItem('Model', car.model?.name)}
@@ -84,19 +84,19 @@ export async function CarShowPage(
         </div>
 
         <!-- DESCRIPTION -->
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
           <h2 class="text-xl font-semibold mb-4">
             Description
           </h2>
 
-          <p class="text-gray-700 whitespace-pre-line">
+          <p class="text-gray-700 whitespace-pre-line dark:text-gray-100">
             ${car.description ?? 'No description'}
           </p>
         </div>
 
         <!-- FEATURES -->
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
           <h2 class="text-xl font-semibold mb-4">
             Features
@@ -107,7 +107,7 @@ export async function CarShowPage(
             ${
               car.features?.length
                 ? car.features.map((f: any) => `
-                    <span class="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                    <span class="bg-gray-100 px-3 py-1 rounded-full text-sm  dark:bg-gray-800 dark:text-gray-100">
                       ${f.name}
                     </span>
                   `).join('')
@@ -118,7 +118,7 @@ export async function CarShowPage(
         </div>
 
         <!-- SELLER -->
-        <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
           <h2 class="text-xl font-semibold mb-4">
             Seller
@@ -250,8 +250,8 @@ function detailItem(
 ) {
 
   return `
-    <div class="bg-gray-50 rounded-lg p-3">
-      <div class="text-sm text-gray-500">
+    <div class="bg-gray-50 rounded-lg p-3  dark:bg-gray-700 dark:text-gray-100">
+      <div class="text-sm text-gray-500 dark:text-gray-100">
         ${label}
       </div>
 

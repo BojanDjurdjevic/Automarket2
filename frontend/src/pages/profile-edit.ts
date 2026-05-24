@@ -15,7 +15,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
 
   wrapper.innerHTML = `
 
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-2xl font-bold mb-6">
         Edit Profile
@@ -44,7 +44,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
           <input
             disabled
             value="${user.email}"
-            class="w-full border rounded p-2 bg-gray-100"
+            class="w-full border rounded p-2 bg-gray-100  dark:bg-gray-800 dark:text-gray-100"
           />
         </div>
 
@@ -76,7 +76,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
 
         <button
           id="save"
-          class="bg-blue-500 text-white px-4 py-2 rounded"
+          class="bg-indigo-600 text-white px-4 py-2 rounded"
         >
           Save Changes
         </button>

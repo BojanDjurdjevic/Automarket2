@@ -9,7 +9,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
     'max-w-2xl mx-auto';
 
   wrapper.innerHTML = `
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
       Loading profile...
     </div>
   `;
@@ -18,7 +18,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
 
   wrapper.innerHTML = `
   
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <div class="flex items-center justify-between mb-6">
 
@@ -100,21 +100,21 @@ export async function ProfilePage(): Promise<HTMLElement> {
 
         <button
           id="edit-profile"
-          class="bg-blue-500 text-white px-4 py-2 rounded"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded"
         >
           Edit Profile
         </button>
 
         <button
           id="change-password"
-          class="bg-gray-800 text-white px-4 py-2 rounded"
+          class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded  dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100"
         >
           Change Password
         </button>
 
         <button
           id="delete-account"
-          class="bg-red-600 text-white px-4 py-2 rounded"
+          class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded"
         >
           Delete Account
         </button>

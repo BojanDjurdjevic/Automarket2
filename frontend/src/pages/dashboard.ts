@@ -7,7 +7,7 @@ export function DashboardPage(): HTMLElement {
   const div = document.createElement('div');
 
   div.innerHTML = `
-    <div class="p-6">
+    <div class="p-6  dark:bg-gray-800 dark:text-gray-100">
       <h1 class="text-2xl mb-4">
         Welcome ${authStore.user?.name}
       </h1>

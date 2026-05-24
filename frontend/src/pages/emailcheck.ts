@@ -11,7 +11,7 @@ export async function EmailCheckPage(): Promise<HTMLElement> {
   wrapper.className = 'text-center mt-20';
 
   wrapper.innerHTML = `
-    <p class="text-gray-600">
+    <p class="text-gray-600  dark:bg-gray-800 dark:text-gray-100">
       Verifying email...
     </p>
   `;

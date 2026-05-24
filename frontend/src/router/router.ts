@@ -95,12 +95,16 @@ export class Router {
       } 
 
       const page = await route.component(params)
-
+      /*
       if (path === '/login') {
         this.root.appendChild(page);
       } else {
         this.root.appendChild(MainLayout(page));
-      }
+      } */
+
+      this.root.appendChild(
+        MainLayout(page)
+      );
 
       if (path === '/') {
         this.navigate('/cars');

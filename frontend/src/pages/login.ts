@@ -8,8 +8,8 @@ export function LoginPage(): HTMLElement {
   const div = document.createElement('div');
 
   div.innerHTML = `
-    <div class="min-h-screen flex items-center justify-center">
-      <div class="bg-white p-6 rounded shadow w-80">
+    <div class="min-h-screen flex items-center justify-center  dark:bg-gray-700 dark:text-gray-100">
+      <div class="bg-white p-6 rounded shadow w-80  dark:bg-gray-800 dark:text-gray-100">
         <h2 class="text-xl mb-4">Login</h2>
 
         <input id="email" placeholder="Email"
@@ -19,7 +19,7 @@ export function LoginPage(): HTMLElement {
           class="border p-2 w-full mb-4" />
 
         <button id="login-btn"
-          class="bg-blue-500 text-white px-4 py-2 w-full">
+          class="bg-indigo-600 text-white px-4 py-2 w-full">
           Login
         </button>
 

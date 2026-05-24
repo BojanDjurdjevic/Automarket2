@@ -11,7 +11,7 @@ export function ProfilePasswordPage(): HTMLElement {
 
   wrapper.innerHTML = `
 
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-2xl font-bold mb-6">
         Change Password
@@ -57,7 +57,7 @@ export function ProfilePasswordPage(): HTMLElement {
 
         <button
           id="save"
-          class="bg-blue-500 text-white px-4 py-2 rounded"
+          class="bg-indigo-600 text-white px-4 py-2 rounded"
         >
           Update Password
         </button>

@@ -13,13 +13,13 @@ export function ProfileDeletePage(): HTMLElement {
 
   wrapper.innerHTML = `
 
-    <div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-2xl font-bold text-red-600 mb-4">
         Delete Account
       </h1>
 
-      <p class="text-gray-600 mb-6">
+      <p class="text-gray-600 mb-6 dark:text-gray-100">
         This action is permanent.
         All your cars and images will be deleted.
       </p>

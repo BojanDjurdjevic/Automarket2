@@ -4,12 +4,12 @@ import { Toast } from '../utils/toast';
 export function VerifyEmailPage(): HTMLElement {
   const wrapper = document.createElement('div');
 
-  wrapper.className = 'max-w-lg mx-auto mt-20 text-center';
+  wrapper.className = 'max-w-lg mx-auto mt-20 text-center  dark:bg-gray-800 dark:text-gray-100';
 
   wrapper.innerHTML = `
     <h1 class="text-2xl font-bold mb-4">Verify your email</h1>
 
-    <p class="text-gray-600 mb-6">
+    <p class="text-gray-600 mb-6 dark:text-gray-100">
       We sent you a verification link. Please check your inbox.
     </p>
 

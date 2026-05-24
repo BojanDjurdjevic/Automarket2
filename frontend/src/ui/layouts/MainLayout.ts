@@ -271,8 +271,7 @@ export function MainLayout(content: HTMLElement): HTMLElement {
     loginBtn.style.display = 'none';
   }
 
-  const contentEl =
-    wrapper.querySelector('#app-content')!;
+  const contentEl = wrapper.querySelector('#app-content')!;
 
   contentEl.appendChild(content);
 
@@ -289,9 +288,7 @@ export function MainLayout(content: HTMLElement): HTMLElement {
     path: string
   ) => {
 
-    wrapper.querySelector(selector)!
-      .addEventListener('click', (e) => {
-
+    wrapper.querySelector(selector)!.addEventListener('click', (e) => {
         e.preventDefault();
 
         router.navigate(path);

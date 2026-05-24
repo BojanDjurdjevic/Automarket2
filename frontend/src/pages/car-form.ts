@@ -19,7 +19,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
       ${isEdit ? 'Edit Car' : 'Create Car'}
     </h1>
 
-    <div id="form" class="bg-white p-6 rounded shadow max-w-lg">
+    <div id="form" class="bg-white p-6 rounded shadow max-w-lg  dark:bg-gray-800 dark:text-gray-100">
       Loading form...
     </div>
   `;
@@ -64,7 +64,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
     const label = document.createElement('label');
     label.textContent = labelText;
-    label.className = 'block text-sm font-medium mb-1 text-gray-700';
+    label.className = 'block text-sm font-medium mb-1 text-gray-700 dark:text-gray-100';
 
     wrapper.appendChild(label);
     wrapper.appendChild(input);
@@ -136,7 +136,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
     imageInput.multiple = true;
     imageInput.accept = 'image/*';
 
-    imageInput.className = 'border p-2 w-full mb-3 bg-white';
+    imageInput.className = 'border p-2 w-full mb-3 bg-white  dark:bg-gray-800 dark:text-gray-100';
     imagePreview.className = 'grid grid-cols-2 md:grid-cols-3 gap-3 mt-3';
     existingImages.className = 'grid grid-cols-2 md:grid-cols-3 gap-3 mb-4';
 
@@ -223,7 +223,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
     const featuresTitle = document.createElement('p');
     featuresTitle.textContent = 'Features';
-    featuresTitle.className = 'text-sm font-medium mb-2 text-gray-700';
+    featuresTitle.className = 'text-sm font-medium mb-2 text-gray-700 dark:text-gray-100';
 
     featuresWrapper.appendChild(featuresTitle);
 

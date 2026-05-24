@@ -7,7 +7,7 @@ export function RegisterPage(): HTMLElement {
   const wrapper = document.createElement('div');
 
   wrapper.innerHTML = `
-    <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <div class="max-w-md mx-auto bg-white p-6 rounded shadow  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-xl font-semibold mb-4">Register</h1>
 
@@ -19,7 +19,7 @@ export function RegisterPage(): HTMLElement {
       <input id="password_confirmation" type="password" placeholder="Confirm Password" class="border p-2 w-full mb-3" />
 
       <button id="registerBtn"
-        class="bg-green-500 text-white w-full py-2 rounded">
+        class="bg-emerald-600 text-white w-full py-2 rounded">
         Register
       </button>
 

@@ -10,13 +10,13 @@ export function ForgotPasswordPage(): HTMLElement {
 
   wrapper.innerHTML = `
 
-    <div class="bg-white shadow rounded-xl p-6">
+    <div class="bg-white shadow rounded-xl p-6  dark:bg-gray-800 dark:text-gray-100">
 
       <h1 class="text-2xl font-bold mb-4">
         Forgot Password
       </h1>
 
-      <p class="text-gray-600 mb-6">
+      <p class="text-gray-600 mb-6  dark:text-gray-100">
         Enter your email to receive a password reset link.
       </p>
 
@@ -29,7 +29,7 @@ export function ForgotPasswordPage(): HTMLElement {
 
       <button
         id="send"
-        class="w-full bg-blue-500 text-white py-2 rounded"
+        class="w-full bg-indigo-600 text-white py-2 rounded"
       >
         Send Reset Link
       </button>
