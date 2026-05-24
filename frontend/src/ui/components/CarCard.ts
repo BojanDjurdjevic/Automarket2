@@ -7,7 +7,7 @@ export function CarCard(car: any): HTMLElement {
   card.className = `
     bg-white rounded-xl overflow-hidden shadow
     hover:shadow-lg transition cursor-pointer
-    border border-gray-100
+    border border-gray-100  dark:bg-gray-800 dark:text-gray-100
   `;
 
   const image = car.image || 'https://placehold.co/600x400?text=No+Image';
@@ -15,7 +15,7 @@ export function CarCard(car: any): HTMLElement {
   card.innerHTML = `
     
     <!-- IMAGE -->
-    <div class="h-52 bg-gray-100 overflow-hidden">
+    <div class="h-52 bg-gray-100 overflow-hidden ">
       <img
         src="${image}"
         alt="${car.title}"
@@ -40,27 +40,27 @@ export function CarCard(car: any): HTMLElement {
       <!-- META -->
       <div class="flex flex-wrap gap-2 mt-3 text-sm">
 
-        <span class="bg-gray-100 px-2 py-1 rounded">
+        <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
           ${car.year}
         </span>
 
-        <span class="bg-gray-100 px-2 py-1 rounded">
+        <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
           ${Number(car.mileage).toLocaleString()} km
         </span>
 
-        <span class="bg-gray-100 px-2 py-1 rounded">
+        <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
           ${car.fuel_type?.name ?? 'Fuel'}
         </span>
 
       </div>
 
       <!-- LOCATION -->
-      <div class="mt-4 text-sm text-gray-500">
+      <div class="mt-4 text-sm text-gray-500 dark:text-gray-100">
         📍 ${car.location}
       </div>
 
       <!-- SELLER -->
-      <div class="mt-3 pt-3 border-t text-sm text-gray-600">
+      <div class="mt-3 pt-3 border-t text-sm text-gray-600 dark:text-gray-100">
         Seller:
         <span class="font-medium">
           ${car.user?.name ?? 'Unknown'}

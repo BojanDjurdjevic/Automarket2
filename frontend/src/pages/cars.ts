@@ -12,7 +12,7 @@ export function CarsPage(): HTMLElement {
       <h1 class="text-2xl font-semibold">Cars</h1>
 
       <button id="create-btn"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+        class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded">
         + Add Car
       </button>
     </div>
@@ -25,7 +25,7 @@ export function CarsPage(): HTMLElement {
   const filtersWrapper = document.createElement('div');
 
   filtersWrapper.className =
-    'bg-white p-4 rounded shadow mb-4 grid grid-cols-2 md:grid-cols-4 gap-3';
+    'bg-white p-4 rounded shadow mb-4 grid grid-cols-2 md:grid-cols-4 gap-3  dark:bg-gray-800 dark:text-gray-100';
 
   filtersWrapper.innerHTML = `
     <input id="search" placeholder="Search..."
@@ -44,7 +44,7 @@ export function CarsPage(): HTMLElement {
       class="border p-2 rounded" />
 
     <button id="apply"
-      class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">
+      class="bg-indigo-600 hover:bg-indigo-500 text-white rounded px-3 py-2">
       Apply
     </button>
   `;

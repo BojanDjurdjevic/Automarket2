@@ -11,12 +11,12 @@ export function MainLayout(content: HTMLElement): HTMLElement {
   const wrapper = document.createElement('div');
 
   wrapper.className =
-    'min-h-screen flex flex-col bg-gray-100';
+    'min-h-screen flex flex-col bg-gray-100  dark:bg-gray-700 dark:text-gray-100';
 
   wrapper.innerHTML = `
     
     <!-- Navbar -->
-    <nav class="bg-white shadow px-4 md:px-6 py-4 relative dark:bg-gray-800 dark:text-gray-100">
+    <nav class="bg-white border-b shadow px-4 md:px-6 py-4 relative dark:bg-gray-800 dark:text-gray-100">
 
     <div class="flex justify-between items-center">
 
@@ -138,7 +138,7 @@ export function MainLayout(content: HTMLElement): HTMLElement {
 
     <!-- Content -->
     <main
-      class="flex-1 p-6 max-w-6xl w-full mx-auto"
+      class="flex-1 p-6 max-w-6xl w-full mx-auto dark:bg-gray-700 dark:text-gray-100"
       id="app-content"
     ></main>
 
