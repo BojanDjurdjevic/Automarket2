@@ -18,6 +18,7 @@ import { ProfilePasswordPage } from './pages/profile-password';
 import { ProfileDeletePage } from './pages/profile-delete';
 import { ForgotPasswordPage } from './pages/forgot-password';
 import { ResetPasswordPage } from './pages/reset-password';
+import { themeStore } from './store/theme.store';
 
 const root = document.querySelector('#app') as HTMLElement;
 
@@ -119,5 +120,6 @@ router.register({
   component: ResetPasswordPage
 });
 
+themeStore.init();
 
 initApp();
