@@ -2,6 +2,8 @@ import { profileService } from '../services/profile.service';
 import { authStore } from '../store/auth.store';
 import { router } from '../main';
 import { Toast } from '../utils/toast';
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
+import { clearFieldErrors, showFieldError } from '../utils/form-errors';
 
 export async function ProfileEditPage(): Promise<HTMLElement> {
 
@@ -109,9 +111,32 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
 
         router.navigate('/profile');
 
-      } catch {
-
+      } catch(e: any) {
+        /*
         Toast.error('Update failed');
+        */
+        clearFieldErrors(wrapper);
+        
+        if (e?.response?.status === 422) {
+        
+          const errors = getValidationErrors(e);
+        
+          Object.entries(errors).forEach(([field, messages]) => {
+              const input = wrapper.querySelector( `#${field}`);
+        
+              if (input) {
+                showFieldError(
+                  input as HTMLElement,
+                  messages[0]
+                );
+              }
+            }
+          );
+        
+          return;
+        }
+        
+        Toast.error(getErrorMessage(e));
       }
     });
 

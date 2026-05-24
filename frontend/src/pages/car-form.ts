@@ -6,6 +6,8 @@ import { api } from '../api/axios';
 import { Toast } from '../utils/toast';
 import { hideLoading, showLoading } from '../ui/layouts/Overlay';
 import { confirmModal } from '../ui/components/ConfirmModal';
+import { clearFieldErrors, showFieldError } from '../utils/form-errors';
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
 
 export function CarFormPage(params?: Record<string, string>): HTMLElement {
   const wrapper = document.createElement('div');
@@ -357,9 +359,30 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
               Toast.success('Image deleted');
 
-            } catch {
+            } catch(e: any) {
+              //Toast.error('Delete failed');
 
-              Toast.error('Delete failed');
+              clearFieldErrors(wrapper);
+
+              if (e?.response?.status === 422) {
+                const errors = getValidationErrors(e);
+
+                Object.entries(errors).forEach(([field, messages]) => {
+                    const input = wrapper.querySelector(`#${field}`);
+
+                    if (input) {
+                      showFieldError(
+                        input as HTMLElement,
+                        messages[0]
+                      );
+                    }
+                  }
+                );
+
+                return;
+              }
+
+              Toast.error(getErrorMessage(e));
             }
           });
 
@@ -389,11 +412,30 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
                     `/cars/${car.id}/edit`
                   );
 
-                } catch {
+                } catch(e: any) {
+                  //Toast.error('Failed to update image');
+                  clearFieldErrors(wrapper);
 
-                  Toast.error(
-                    'Failed to update image'
-                  );
+                  if (e?.response?.status === 422) {
+
+                    const errors = getValidationErrors(e);
+
+                    Object.entries(errors).forEach(([field, messages]) => {
+                        const input = wrapper.querySelector( `#${field}`);
+
+                        if (input) {
+                          showFieldError(
+                            input as HTMLElement,
+                            messages[0]
+                          );
+                        }
+                      }
+                    );
+
+                    return;
+                  }
+
+                  Toast.error( getErrorMessage(e));
                 }
               }
             );
@@ -486,7 +528,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
         router.navigate('/cars');
 
       } catch (e: any) {
-
+        /*
         console.error(e);
 
         const status = e?.response?.status;
@@ -501,10 +543,31 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
           return;
         }
 
-        Toast.error('Something went wrong');
+        Toast.error('Something went wrong'); */
 
+        clearFieldErrors(wrapper);
+
+        if (e?.response?.status === 422) {
+
+          const errors = getValidationErrors(e);
+
+          Object.entries(errors).forEach(([field, messages]) => {
+              const input = wrapper.querySelector( `#${field}`);
+
+              if (input) {
+                showFieldError(
+                  input as HTMLElement,
+                  messages[0]
+                );
+              }
+            }
+          );
+
+          return;
+        }
+
+        Toast.error(getErrorMessage(e));
       } finally {
-
         hideLoading();
       }
   });
