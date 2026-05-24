@@ -125,9 +125,16 @@ export function MainLayout(content: HTMLElement): HTMLElement {
 
       <button
         id="mobile-logout"
-        class="bg-gray-500 text-white px-3 py-2 rounded"
+        class="bg-indigo-600 text-white px-3 py-2 rounded"
       >
         Logout
+      </button>
+
+      <button
+        id="mobile-login"
+        class="bg-emerald-600 text-white px-3 py-2 rounded"
+      >
+        Login
       </button>
 
     </div>
@@ -247,6 +254,16 @@ export function MainLayout(content: HTMLElement): HTMLElement {
 
   const mobileMenu = wrapper.querySelector('#mobile-menu') as HTMLElement;
 
+  //const mobileCars = wrapper.querySelector('#mobile-cars') as HTMLElement;
+
+  const mobileMyCars = wrapper.querySelector('#mobile-my-cars') as HTMLElement;
+
+  const mobileProfile = wrapper.querySelector('#mobile-profile') as HTMLElement;
+
+  const mobileLogin = wrapper.querySelector('#mobile-login') as HTMLButtonElement
+
+  const mobileLogout = wrapper.querySelector('#mobile-logout') as HTMLButtonElement;
+
   mobileBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle(
         'hidden'
@@ -266,9 +283,12 @@ export function MainLayout(content: HTMLElement): HTMLElement {
     footerMyCars.style.display = 'none';
     footerProfile.style.display = 'none';
 
+    mobileMyCars.style.display = 'none';
+    mobileProfile.style.display = 'none';
+    mobileLogout.style.display = 'none';
   } else {
-
     loginBtn.style.display = 'none';
+    mobileLogin.style.display = 'none';
   }
 
   const contentEl = wrapper.querySelector('#app-content')!;
@@ -306,6 +326,7 @@ export function MainLayout(content: HTMLElement): HTMLElement {
   navigate('#mobile-cars', '/cars');
   navigate('#mobile-my-cars', '/my-cars');
   navigate('#mobile-profile', '/profile');
+  navigate('#mobile-login', '/login');
 
   // Logout
   logoutBtn.addEventListener(
@@ -323,8 +344,8 @@ export function MainLayout(content: HTMLElement): HTMLElement {
   );
 
   // Mobile logout
-  wrapper.querySelector('#mobile-logout')
-  ?.addEventListener('click', async () => {
+  //wrapper.querySelector('#mobile-logout')
+  mobileLogout?.addEventListener('click', async () => {
 
     await authService.logout();
 
