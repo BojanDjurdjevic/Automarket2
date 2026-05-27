@@ -106,7 +106,7 @@ export class Router {
         MainLayout(page)
       );
 
-      if (path === '/') {
+      if (path === '/' || path === '') {
         this.navigate('/cars');
         return;
       }
