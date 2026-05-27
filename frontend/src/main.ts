@@ -26,11 +26,13 @@ export const router = new Router(root);
 
 router.register({
   path: '/register',
-  component: RegisterPage
+  component: RegisterPage,
+  meta: { guest: true }
 });
 router.register({ 
     path: '/login', 
-    component: LoginPage 
+    component: LoginPage,
+    meta: { guest: true }
 });
 router.register({ 
     path: '/dashboard', 
@@ -51,11 +53,13 @@ router.register({
 router.register({
   path: '/cars/create',
   component: CarFormPage,
+  meta: { auth: true }
 });
 
 router.register({
   path: '/cars/:id/edit',
   component: CarFormPage,
+  meta: { auth: true }
 });
 
 router.register({

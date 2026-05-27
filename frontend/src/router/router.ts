@@ -5,13 +5,14 @@ import { MainLayout } from '../ui/layouts/MainLayout';
 
 type Route = {
   path: string;
-  
+
   component: (
     params?: Record<string, string>
   ) => HTMLElement | Promise<HTMLElement>;
 
   meta?: {
     auth?: boolean;
+    guest?: boolean;
   }
 };
 
@@ -37,83 +38,107 @@ export class Router {
     this.render();
   }
 
-  private match(path: string): {route: Route; params: Record<string, string>} | null {
+  private match(
+    path: string
+  ): { route: Route; params: Record<string, string> } | null {
+
     for (const route of this.routes) {
-      const paramNames: string[] = []
 
-      const regexPath = route.path.replace(/:([^/]+)/g, (_, name) => {
-        paramNames.push(name)
-        return '([^/]+)'
-      })
+      const paramNames: string[] = [];
 
-      const regex = new RegExp(`^${regexPath}$`)
-      const match = path.match(regex)
+      const regexPath = route.path.replace(
+        /:([^/]+)/g,
+        (_, name) => {
+          paramNames.push(name);
+
+          return '([^/]+)';
+        }
+      );
+
+      const regex = new RegExp(`^${regexPath}$`);
+
+      const match = path.match(regex);
 
       if (match) {
-        const params: Record<string, string> = {}
+
+        const params: Record<string, string> = {};
 
         paramNames.forEach((name, i) => {
-          params[name] = match[i + 1]
-        })
+          params[name] = match[i + 1];
+        });
 
-        return { route, params }
+        return {
+          route,
+          params
+        };
       }
     }
 
-    return null
+    return null;
   }
 
   async render() {
+
     const path = window.location.pathname;
+
+    // HOME redirect
+    if (path === '/' || path === '') {
+      this.navigate('/cars');
+      return;
+    }
 
     const result = this.match(path);
 
+    // INVALID route redirect
+    if (!result) {
+      this.navigate('/cars');
+      return;
+    }
+
     this.root.innerHTML = '';
 
-    if (result) {
-      const { route, params } = result;
+    const { route, params } = result;
 
-      // AUTH check:
-      if (route.meta?.auth && !authStore.isAuthenticated) {
-        this.navigate('/login');
-        return;
-      }
-
-      //email-verify check:
-
-      if (
-        authStore.isAuthenticated &&
-        authStore.user &&
-        !authStore.user.email_verified_at
-      ) {
-        const isAllowed = path === '/verify-email' ||  path === '/verify-success' ||  path.startsWith('/email-check');
-
-        if (!isAllowed) {
-          this.navigate('/verify-email');
-          return;
-        }
-      } 
-
-      const page = await route.component(params)
-      /*
-      if (path === '/login') {
-        this.root.appendChild(page);
-      } else {
-        this.root.appendChild(MainLayout(page));
-      } */
-
-      this.root.appendChild(
-        MainLayout(page)
-      );
-
-      if (path === '/' || path === '') {
-        this.navigate('/cars');
-        return;
-      }
-
-    } else {
-      this.root.textContent = '404';
+    // AUTH check
+    if (
+      route.meta?.auth &&
+      !authStore.isAuthenticated
+    ) {
+      this.navigate('/login');
+      return;
     }
-  }
-} 
 
+    // GUEST ONLY check
+    if (
+      route.meta?.guest &&
+      authStore.isAuthenticated
+    ) {
+      this.navigate('/cars');
+      return;
+    }
+
+    // EMAIL VERIFY check
+    if (
+      authStore.isAuthenticated &&
+      authStore.user &&
+      !authStore.user.email_verified_at
+    ) {
+
+      const isAllowed =
+        path === '/verify-email' ||
+        path === '/verify-success' ||
+        path.startsWith('/email-check');
+
+      if (!isAllowed) {
+        this.navigate('/verify-email');
+        return;
+      }
+    }
+
+    const page = await route.component(params);
+
+    this.root.appendChild(
+      MainLayout(page)
+    );
+  }
+}
