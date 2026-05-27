@@ -1,8 +1,8 @@
-# FindCar
+# Automarket
 
 Fullstack car marketplace application built with Laravel and TypeScript.
 
-FindCar is a modern SPA marketplace where users can register, verify their email, manage their profile, and create car listings with image uploads.
+Automarket is a modern SPA marketplace where users can register, verify their email, manage their profile, and create car listings with image uploads.
 
 ---
 
@@ -12,9 +12,66 @@ Coming soon.
 
 ---
 
-## Screenshots
+## SCREENSHOTS
 
+## Desktop:
 
+## Homepage
+<p align="center">
+  <img src="screenshots/Homepage.png" width="900">
+</p>
+
+## HomePageLight
+<p align="center">
+  <img src="screenshots/HomeLight.png" width="900">
+</p>
+
+## OneCar
+<p align="center">
+  <img src="screenshots/OneCar.png" width="900">
+</p>
+
+## MyCar
+<p align="center">
+  <img src="screenshots/MyCar.png" width="900">
+</p>
+
+## CarDetails
+<p align="center">
+  <img src="screenshots/CarDetails.png" width="900">
+</p>
+
+## Footer
+<p align="center">
+  <img src="screenshots/Footer.png" width="900">
+</p>
+
+## Manage Images
+<p align="center">
+  <img src="screenshots/ManageImgs.png" width="900">
+</p>
+
+## Profile Dark
+<p align="center">
+  <img src="screenshots/ProfileDark.png" width="900">
+</p>
+
+## Mobile:
+
+## HomeMobile
+<p align="center">
+  <img src="screenshots/HomeMobile.png" width="900">
+</p>
+
+## Profile Mobile Light
+<p align="center">
+  <img src="screenshots/ProfileMobileLight.png" width="900">
+</p>
+
+## Dark Mobile
+<p align="center">
+  <img src="screenshots/DarkMobile.png" width="900">
+</p>
 ---
 
 # Tech Stack
