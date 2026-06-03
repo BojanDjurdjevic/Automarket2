@@ -58,20 +58,18 @@ class CarImageService
       });
    }
 
-   public function deleteImage(Car $car, CarImage $image, ?string $path = ''): void
+   public function deleteImage(Car $car, CarImage $image): void
    {
       if($image->car_id !== $car->id) {
          abort(404);
       }
 
-      DB::transaction(function() use($car, $image, $path) {
+      DB::transaction(function() use($car, $image) {
          $wasPrimary =$image->is_primary;
 
          $path = $image->image_path;
 
          $image->delete();
-
-         Storage::disk('public')->delete($path);
 
          if ($wasPrimary) {
             $newPrimary = $car->images()
@@ -87,9 +85,7 @@ class CarImageService
 
       });
 
-      $this->deleteImageFile(
-         $path
-      );
+      $this->deleteImageFile($path);
    }
 
    public function deleteAllImages(Car $car): void
