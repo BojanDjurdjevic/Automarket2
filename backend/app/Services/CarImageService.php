@@ -93,11 +93,11 @@ class CarImageService
       foreach ($car->images as $image) {
 
          if (
-               $image->path &&
-               Storage::disk('public')->exists($image->path)
+               $image->image_path &&
+               Storage::disk('public')->exists($image->image_path)
          ) {
                Storage::disk('public')->delete(
-                  $image->path
+                  $image->image_path
                );
          }
 
