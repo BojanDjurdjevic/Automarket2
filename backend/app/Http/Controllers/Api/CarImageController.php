@@ -29,6 +29,7 @@ class CarImageController
         ]);
     }
 
+    /*
     public function setPrimary(Car $car, CarImage $image)
     {
         if ($image->car_id !== $car->id) {
@@ -47,6 +48,26 @@ class CarImageController
                 'is_primary' => true
             ]);
         });
+
+        return response()->json([
+            'message' => 'Primary image updated'
+        ]);
+    } */
+
+    // Logic moved into Service
+
+    public function setPrimary(Car $car, CarImage $image)
+    {
+        if ($image->car_id !== $car->id) {
+            abort(404);
+        }
+
+        Gate::authorize('update', $car);
+
+        $this->imageService->setPrimary(
+            $car,
+            $image
+        );
 
         return response()->json([
             'message' => 'Primary image updated'
