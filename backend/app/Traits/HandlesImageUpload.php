@@ -20,12 +20,16 @@ trait HandlesImageUpload
 
         $image = $manager->read($file)->toWebp(90)->toString();
 
-        Storage::disk('public')->put($path, $image);
+        if (! Storage::disk('public')->put($path, $image)) {
+            throw new \RuntimeException('Unable to store car image.');
+        }
 
         return $path;
     }
 
     protected function deleteImageFile(string $path): void {
-        Storage::disk('public')->delete($path);
+        if (! Storage::disk('public')->delete($path)) {
+            throw new \RuntimeException('Unable to delete car image.');
+        }
     }
 }

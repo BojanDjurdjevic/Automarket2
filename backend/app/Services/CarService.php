@@ -4,10 +4,7 @@ namespace App\Services;
 
 use App\Models\Car;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
 
 class CarService
 {
@@ -18,24 +15,7 @@ class CarService
 
     protected function storeImages(Car $car, array $images): void
     {
-        $gd = new Driver();
-        $manager = new ImageManager($gd);
-
-        foreach ($images as $index => $file) {
-            $fileName = uniqid() . ".webp";
-
-            $image = $manager->read($file)->toWebp(90)->toString();
-
-            $path = "cars/{$car->id}/{$fileName}";
-
-            Storage::disk('public')->put($path, $image);
-
-            $car->images()->create([
-                'image_path' => $path,
-                'is_primary' => $index === 0,
-                'sort_order' => $index
-            ]);
-        }
+        app(CarImageService::class)->addImages($car, $images);
     }
 
     public function createListing(array $data, ?array $images = null): Car
@@ -44,7 +24,7 @@ class CarService
             function () use ($data, $images) {
                 $featureIds = $data['features'] ?? [];
                 
-                unset($data['features']);
+                unset($data['features'], $data['images']);
                 
                 $data['user_id'] = auth()->id();
 
@@ -69,6 +49,7 @@ class CarService
     {
         return DB::transaction(
             function() use($car, $data, $images) {
+                $car = Car::whereKey($car->id)->lockForUpdate()->firstOrFail();
                 $featureIds = $data['features'] ?? [];
 
                 if(array_key_exists('features', $data)) {
@@ -78,7 +59,7 @@ class CarService
                     );
                 }
 
-                unset($data['features']);
+                unset($data['features'], $data['images']);
 
                 if(isset($data['title'])) $data['slug'] = Str::slug($data['title'] . '-' . uniqid());
                 
@@ -96,6 +77,7 @@ class CarService
                     'transmission',
                     'features',
                     'images',
+                    'primaryImage',
                     'user'
                 ]);
             }
@@ -104,14 +86,11 @@ class CarService
 
     public function deleteListing(Car $car): void
     {
-        $folder = "cars/{$car->id}";
-
         DB::transaction(function() use($car){
+            $car = Car::whereKey($car->id)->lockForUpdate()->firstOrFail();
             $car->features()->detach();
-            $car->images()->delete();
             $car->delete();
+            app(CarImageService::class)->deleteAllImages($car);
         });
-
-        Storage::disk('public')->deleteDirectory($folder);
     }
 }

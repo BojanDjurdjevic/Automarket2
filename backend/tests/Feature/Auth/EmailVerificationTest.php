@@ -29,7 +29,7 @@ class EmailVerificationTest extends TestCase
 
         Event::assertDispatched(Verified::class);
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(config('app.frontend_url').'/dashboard?verified=1');
+        $response->assertOk()->assertJson(['message' => 'Email verified']);
     }
 
     public function test_email_is_not_verified_with_invalid_hash(): void
@@ -45,5 +45,22 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user)->get($verificationUrl);
 
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_expired_verification_links_are_rejected(): void
+    {
+        $user = User::factory()->unverified()->create();
+        $url = URL::temporarySignedRoute('verification.verify', now()->subMinute(), [
+            'id' => $user->id, 'hash' => sha1($user->email),
+        ]);
+
+        $this->actingAs($user)->getJson($url)->assertForbidden();
+        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_verified_users_receive_json_when_requesting_another_email(): void
+    {
+        $this->actingAs(User::factory()->create())->postJson('/email/verification-notification')
+            ->assertOk()->assertJsonPath('status', 'already-verified');
     }
 }

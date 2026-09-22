@@ -1,3 +1,4 @@
+import { getErrorMessage } from '../utils/api-error';
 import { carService } from '../services/car.service';
 import { CarCard } from '../ui/components/CarCard';
 import { router } from '../main';
@@ -50,7 +51,7 @@ export function CarsPage(): HTMLElement {
   `;
 
   // Page State:
-  let currentPage = 1;
+  let requestVersion = 0;
   let currentQuery = '';
 
   function buildQuery() {
@@ -63,7 +64,6 @@ export function CarsPage(): HTMLElement {
     const yearMax = (filtersWrapper.querySelector('#year_max') as HTMLInputElement).value;
 
     if (search?.trim()) params.append('search', search.trim());
-    console.log(search)
     if (priceMin) params.append('price_min', priceMin);
     if (priceMax) params.append('price_max', priceMax);
     if (yearMin) params.append('year_min', yearMin);
@@ -72,21 +72,11 @@ export function CarsPage(): HTMLElement {
     return params.toString();
   }
 
-  function render(cars: any[]) {
-    list.innerHTML = '';
-
-    cars.forEach(car => {
-      list.appendChild(CarCard(car));
-    });
-  }
-
   const applyBtn = filtersWrapper.querySelector('#apply')!;
 
   applyBtn.addEventListener('click', async () => {
 
     currentQuery = buildQuery();
-
-    currentPage = 1;
 
     renderCars(1);
   });
@@ -95,6 +85,8 @@ export function CarsPage(): HTMLElement {
   const addCarBtn = wrapper.querySelector('#create-btn') as HTMLButtonElement;
 
   async function renderCars(page = 1) {
+    const version = ++requestVersion;
+    try {
 
     list.innerHTML = `
       <div class="col-span-full text-center py-10">
@@ -107,6 +99,7 @@ export function CarsPage(): HTMLElement {
       currentQuery
     );
 
+    if (version !== requestVersion) return;
     list.innerHTML = '';
 
     res.data.forEach((car: any) => {
@@ -129,13 +122,17 @@ export function CarsPage(): HTMLElement {
         lastPage: res.meta.last_page,
 
         onPageChange: (newPage) => {
-          currentPage = newPage;
           renderCars(newPage);
         }
       })
     );
 
     wrapper.appendChild(paginationWrapper);
+    } catch (error) {
+      if (version !== requestVersion) return;
+      wrapper.querySelector('#pagination')?.remove();
+      list.textContent = getErrorMessage(error);
+    }
   }
 
   // create button

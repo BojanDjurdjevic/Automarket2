@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             CarModelSeeder::class,
         ]);
 
+        if (app()->environment('production')) {
+            return;
+        }
+
         User::factory(10)->create();
 
         Car::factory(50)->create();

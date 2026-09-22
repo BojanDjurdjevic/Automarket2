@@ -1,3 +1,4 @@
+import { escapeHtml } from '../utils/helpers';
 import { authStore } from '../store/auth.store';
 import { authService } from '../services/auth.service';
 import { router } from '../main';
@@ -9,7 +10,7 @@ export function DashboardPage(): HTMLElement {
   div.innerHTML = `
     <div class="p-6  dark:bg-gray-800 dark:text-gray-100">
       <h1 class="text-2xl mb-4">
-        Welcome ${authStore.user?.name}
+        Welcome ${escapeHtml(authStore.user?.name)}
       </h1>
 
       <button id="logout"

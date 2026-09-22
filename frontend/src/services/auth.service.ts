@@ -11,9 +11,7 @@ export const authService = {
         //avatar: string | null;
     }) {
         await getCsrfCooke()
-        const res = await api.post('/register', data);
-
-        return res.data.user;
+        await api.post('/register', data);
     },
     async login(email: string, password: string) {
         await getCsrfCooke()

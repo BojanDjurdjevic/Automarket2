@@ -1,3 +1,4 @@
+import { escapeHtml } from '../utils/helpers';
 import { profileService } from '../services/profile.service';
 import { authStore } from '../store/auth.store';
 import { router } from '../main';
@@ -31,7 +32,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
           <input
             id="name"
             type="text"
-            value="${user.name ?? ''}"
+            value="${escapeHtml(user.name ?? '')}"
             class="w-full border rounded p-2"
           />
         </div>
@@ -43,7 +44,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
 
           <input
             disabled
-            value="${user.email}"
+            value="${escapeHtml(user.email)}"
             class="w-full border rounded p-2 bg-gray-100  dark:bg-gray-800 dark:text-gray-100"
           />
         </div>
@@ -56,7 +57,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
           <input
             id="phone"
             type="text"
-            value="${user.phone ?? ''}"
+            value="${escapeHtml(user.phone ?? '')}"
             class="w-full border rounded p-2"
           />
         </div>
@@ -69,7 +70,7 @@ export async function ProfileEditPage(): Promise<HTMLElement> {
           <input
             id="city"
             type="text"
-            value="${user.city ?? ''}"
+            value="${escapeHtml(user.city ?? '')}"
             class="w-full border rounded p-2"
           />
         </div>

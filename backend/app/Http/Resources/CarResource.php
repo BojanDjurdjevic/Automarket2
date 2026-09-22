@@ -15,6 +15,9 @@ class CarResource extends JsonResource
             'title' => $this->title,
             'price' => $this->price,
             'year' => $this->year,
+            'image' => $this->primaryImage
+                ? Storage::disk('public')->url($this->primaryImage->image_path)
+                : null,
 
             'make' => [
                 'id' => $this->make?->id,
@@ -42,7 +45,7 @@ class CarResource extends JsonResource
             ],
 
             'mileage' => $this->mileage,
-            'engine_size' => (float) $this->engine_size,
+            'engine_size' => $this->engine_size === null ? null : (float) $this->engine_size,
             'horsepower' => $this->horsepower,
             'color' => $this->color,
             'description' => $this->description,
@@ -61,7 +64,7 @@ class CarResource extends JsonResource
 
             'images' => $this->images->map(fn($img) => [
                 'id' => $img->id,
-                'url' => asset('storage/' . $img->image_path),
+                'url' => Storage::disk('public')->url($img->image_path),
                 'is_primary' => (bool) $img->is_primary,
             ]),
             /*

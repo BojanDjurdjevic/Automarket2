@@ -20,9 +20,13 @@ class CarListResource extends JsonResource
 
             'make' => $this->make?->name,
             'model' => $this->model?->name,
+            'fuel_type' => [
+                'id' => $this->fuelType?->id,
+                'name' => $this->fuelType?->name,
+            ],
 
             'image' => $this->primaryImage
-            ? asset('storage/' . $this->primaryImage->image_path)
+            ? Storage::disk('public')->url($this->primaryImage->image_path)
             : null,
             
             'user_id' => $this->user_id,

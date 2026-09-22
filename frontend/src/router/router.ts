@@ -19,6 +19,7 @@ type Route = {
 export class Router {
   private routes: Route[] = [];
   private root: HTMLElement;
+  private renderVersion = 0;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -78,6 +79,7 @@ export class Router {
   }
 
   async render() {
+    const renderVersion = ++this.renderVersion;
 
     const path = window.location.pathname;
 
@@ -135,10 +137,20 @@ export class Router {
       }
     }
 
-    const page = await route.component(params);
-
-    this.root.appendChild(
-      MainLayout(page)
-    );
+    try {
+      const page = await route.component(params);
+      if (renderVersion !== this.renderVersion) return;
+      this.root.replaceChildren(MainLayout(page));
+    } catch (error: any) {
+      if (renderVersion !== this.renderVersion) return;
+      if (error?.response?.status === 401) {
+        authStore.setUser(null);
+        this.navigate('/login');
+        return;
+      }
+      const message = document.createElement('p');
+      message.textContent = 'Unable to load this page. Please try again.';
+      this.root.replaceChildren(MainLayout(message));
+    }
   }
 }

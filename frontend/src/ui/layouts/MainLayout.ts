@@ -1,3 +1,4 @@
+import { escapeHtml } from '../../utils/helpers';
 // src/ui/layouts/MainLayout.ts
 
 import { authStore } from '../../store/auth.store';
@@ -62,7 +63,7 @@ export function MainLayout(content: HTMLElement): HTMLElement {
         <div class="flex items-center gap-4">
 
           <span class="text-gray-600 text-sm dark:text-gray-100"">
-            ${authStore.user?.name ?? ''}
+            ${escapeHtml(authStore.user?.name ?? '')}
           </span>
 
           <button

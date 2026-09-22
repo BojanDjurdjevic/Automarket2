@@ -1,11 +1,14 @@
 import axios from "axios";
+import { authStore } from "../store/auth.store";
 import { hideLoading, showLoading } from "../ui/layouts/Overlay";
 
 export const api = axios.create({
-    baseURL: "http://127.0.0.1:8000",
+    baseURL: import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://127.0.0.1:8000" : window.location.origin),
     withCredentials: true,
+    withXSRFToken: true,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
     }
 })
 
@@ -25,7 +28,7 @@ api.interceptors.request.use(config => {
     if (token) {
         config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
     }
-
+    
     showLoading();
 
     return config;
@@ -38,6 +41,7 @@ api.interceptors.response.use(
   },
   err => {
     hideLoading();
+    if (err?.response?.status === 401) authStore.setUser(null);
     return Promise.reject(err);
   }
 );

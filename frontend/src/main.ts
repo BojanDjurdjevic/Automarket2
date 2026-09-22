@@ -36,7 +36,8 @@ router.register({
 });
 router.register({ 
     path: '/dashboard', 
-    component: DashboardPage 
+    component: DashboardPage,
+    meta: { auth: true }
 });
 
 router.register({

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CarBaseRequest extends FormRequest
 {
@@ -15,27 +16,27 @@ class CarBaseRequest extends FormRequest
     protected function carRules(): array
     {
         return [
-            'make_id' => 'required|exists:car_makes,id',
+            'make_id' => 'required|integer|exists:car_makes,id',
 
-            'model_id' => 'required|exists:car_models,id',
+            'model_id' => ['required', 'integer', Rule::exists('car_models', 'id')->where('make_id', is_scalar($this->input('make_id')) ? $this->input('make_id') : null)],
 
-            'fuel_type_id' => 'required|exists:fuel_types,id',
+            'fuel_type_id' => 'required|integer|exists:fuel_types,id',
 
-            'body_type_id' => 'required|exists:body_types,id',
+            'body_type_id' => 'required|integer|exists:body_types,id',
 
-            'transmission_id' => 'required|exists:transmissions,id',
+            'transmission_id' => 'required|integer|exists:transmissions,id',
 
             'title' => 'required|string|min:3|max:128',
 
             'year' => 'required|integer|min:1950|max:' . now()->year,
 
-            'price' => 'required|integer|gt:0',
+            'price' => 'required|integer|gt:0|max:4294967295',
 
-            'mileage' => 'required|integer|gte:0',
+            'mileage' => 'required|integer|gte:0|max:4294967295',
 
             'engine_size' => 'nullable|numeric|between:0.8,8.0',
 
-            'horsepower' => 'nullable|integer|min:30',
+            'horsepower' => 'nullable|integer|min:30|max:65535',
 
             'color' => 'nullable|string|max:55',
 

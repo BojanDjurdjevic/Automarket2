@@ -1,3 +1,4 @@
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
 import { authService } from '../services/auth.service';
 import { authStore } from '../store/auth.store';
 import { router } from '../main';
@@ -59,8 +60,8 @@ export function LoginPage(): HTMLElement {
 
       router.navigate('/dashboard');
     } catch (e) {
-      Toast.error('Invalid credentials');
-      console.log(e)
+      Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
+
     } finally {
       hideLoading()
     }

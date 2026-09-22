@@ -24,8 +24,8 @@ class CarFilter
             }
         }); */
 
-        $query->when($filters['search'] ?? null, function ($q, $search) {
-            $search = trim($search);
+        $query->when(isset($filters['search']), function ($q) use ($filters) {
+            $search = trim($filters['search']);
 
             $q->where(function ($qq) use ($search) {
                 $qq->where('title', 'like', "%{$search}%")
@@ -59,12 +59,12 @@ class CarFilter
         );
 
         // PRICE RANGE
-        $query->when($filters['price_min'] ?? null,
-            fn($q, $v) => $q->where('price', '>=', $v)
+        $query->when(isset($filters['price_min']),
+            fn($q) => $q->where('price', '>=', $filters['price_min'])
         );
 
-        $query->when($filters['price_max'] ?? null,
-            fn($q, $v) => $q->where('price', '<=', $v)
+        $query->when(isset($filters['price_max']),
+            fn($q) => $q->where('price', '<=', $filters['price_max'])
         );
 
         // YEAR RANGE
@@ -77,8 +77,8 @@ class CarFilter
         );
 
         // MILEAGE
-        $query->when($filters['mileage_max'] ?? null,
-            fn($q, $v) => $q->where('mileage', '<=', $v)
+        $query->when(isset($filters['mileage_max']),
+            fn($q) => $q->where('mileage', '<=', $filters['mileage_max'])
         );
 
         // SORT
@@ -96,7 +96,7 @@ class CarFilter
             $sortDir = 'desc';
         }
 
-        $query->orderBy($sortBy, $sortDir);
+        $query->orderBy($sortBy, $sortDir)->orderBy('id', $sortDir);
 
         return $query;
     }

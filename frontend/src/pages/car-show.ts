@@ -1,3 +1,4 @@
+import { escapeHtml } from '../utils/helpers';
 import { carService } from '../services/car.service';
 import { router } from '../main';
 import { authStore } from '../store/auth.store';
@@ -41,11 +42,11 @@ export async function CarShowPage(
 
             <div>
               <h1 class="text-3xl font-bold">
-                ${car.title}
+                ${escapeHtml(car.title)}
               </h1>
 
               <div class="text-gray-500 mt-2">
-                📍 ${car.location}
+                📍 ${escapeHtml(car.location)}
               </div>
             </div>
 
@@ -91,7 +92,7 @@ export async function CarShowPage(
           </h2>
 
           <p class="text-gray-700 whitespace-pre-line dark:text-gray-100">
-            ${car.description ?? 'No description'}
+            ${escapeHtml(car.description ?? 'No description')}
           </p>
         </div>
 
@@ -108,7 +109,7 @@ export async function CarShowPage(
               car.features?.length
                 ? car.features.map((f: any) => `
                     <span class="bg-gray-100 px-3 py-1 rounded-full text-sm  dark:bg-gray-800 dark:text-gray-100">
-                      ${f.name}
+                      ${escapeHtml(f.name)}
                     </span>
                   `).join('')
                 : '<div class="text-gray-500">No features</div>'
@@ -128,12 +129,12 @@ export async function CarShowPage(
 
             <div>
               <strong>Name:</strong>
-              ${car.user?.name ?? 'Unknown'}
+              ${escapeHtml(car.user?.name ?? 'Unknown')}
             </div>
 
             <div>
               <strong>Email:</strong>
-              ${car.user?.email ?? '-'}
+              ${escapeHtml(car.user?.email ?? '-')}
             </div>
 
           </div>
@@ -238,7 +239,6 @@ export async function CarShowPage(
       </div>
     `;
 
-    console.error(e)
   }
 
   return wrapper;
@@ -256,7 +256,7 @@ function detailItem(
       </div>
 
       <div class="font-semibold mt-1">
-        ${value ?? '-'}
+        ${escapeHtml(value ?? '-')}
       </div>
     </div>
   `;

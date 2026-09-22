@@ -1,3 +1,4 @@
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
 import { router } from "../main";
 import { authService } from "../services/auth.service";
 import { authStore } from "../store/auth.store";
@@ -66,8 +67,8 @@ export function RegisterPage(): HTMLElement {
       router.navigate('/cars');
 
     } catch (e) {
-      Toast.error('Registration failed');
-      console.log(e)
+      Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
+
     }
   });
 

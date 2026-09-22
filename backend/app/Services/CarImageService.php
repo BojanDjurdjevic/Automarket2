@@ -17,16 +17,20 @@ class CarImageService
 
    public function addImages(Car $car, array $files): void
    {
-      DB::transaction(
-        function() use($car,$files){
+      $paths = [];
+      try {
+        DB::transaction(
+        function() use($car,$files, &$paths){
+           Car::whereKey($car->id)->lockForUpdate()->firstOrFail();
 
            $maxOrder = $car->images()->max('sort_order') ?? -1;
 
            $hasPrimary = $car->images()->where('is_primary', true)->exists();
 
-           foreach($files as $index => $file) 
+           foreach(array_values($files) as $index => $file)
             {
               $path =$this->storeProcessedImage($file, "cars/{$car->id}");
+              $paths[] = $path;
 
               $car->images()->create([
                   'image_path' => $path,
@@ -40,11 +44,23 @@ class CarImageService
 
         }
       );
+      } catch (\Throwable $e) {
+          foreach ($paths as $path) {
+              try {
+                  $this->deleteImageFile($path);
+              } catch (\Throwable $cleanupException) {
+                  report($cleanupException);
+              }
+          }
+          throw $e;
+      }
    }
 
    public function setPrimary(Car $car, CarImage $image): void
    {
       DB::transaction(function () use ($car, $image) {
+         Car::whereKey($car->id)->lockForUpdate()->firstOrFail();
+         $image = $car->images()->whereKey($image->id)->firstOrFail();
 
          // reset all
          $car->images()->update([
@@ -65,6 +81,8 @@ class CarImageService
       }
 
       DB::transaction(function() use($car, $image) {
+         Car::whereKey($car->id)->lockForUpdate()->firstOrFail();
+         $image = $car->images()->whereKey($image->id)->firstOrFail();
          $wasPrimary =$image->is_primary;
 
          $path = $image->image_path;
@@ -74,6 +92,7 @@ class CarImageService
          if ($wasPrimary) {
             $newPrimary = $car->images()
                 ->orderBy('sort_order')
+                ->orderBy('id')
                 ->first();
 
             if ($newPrimary) {
@@ -83,29 +102,30 @@ class CarImageService
             }
         }
 
+         DB::afterCommit(function () use ($path) {
+            try {
+               $this->deleteImageFile($path);
+            } catch (\Throwable $cleanupException) {
+               report($cleanupException);
+            }
+         });
       });
-
-      $this->deleteImageFile($path);
    }
 
    public function deleteAllImages(Car $car): void
    {
-      foreach ($car->images as $image) {
-
-         if (
-               $image->image_path &&
-               Storage::disk('public')->exists($image->image_path)
-         ) {
-               Storage::disk('public')->delete(
-                  $image->image_path
-               );
-         }
-
-         $image->delete();
-      }
-
-      Storage::disk('public')->deleteDirectory(
-         "cars/{$car->id}"
-      );
+      $folder = "cars/{$car->id}";
+      DB::transaction(function () use ($car, $folder) {
+          $car->images()->delete();
+          DB::afterCommit(function () use ($folder) {
+              try {
+                  if (! Storage::disk('public')->deleteDirectory($folder)) {
+                      report(new \RuntimeException('Unable to delete car images.'));
+                  }
+              } catch (\Throwable $cleanupException) {
+                  report($cleanupException);
+              }
+          });
+      });
    }
 }

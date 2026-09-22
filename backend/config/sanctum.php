@@ -22,7 +22,9 @@ return [
         '%s%s%s',
         'localhost,localhost:3000,127.0.0.1,127.0.0.1:3000,127.0.0.1:8000,::1',
         Sanctum::currentApplicationUrlWithPort(),
-        env('FRONTEND_URL') ? ','.parse_url(env('FRONTEND_URL'), PHP_URL_HOST) : ''
+        ','.parse_url(env('FRONTEND_URL', 'http://127.0.0.1:5173'), PHP_URL_HOST)
+            .(parse_url(env('FRONTEND_URL', 'http://127.0.0.1:5173'), PHP_URL_PORT)
+                ? ':'.parse_url(env('FRONTEND_URL', 'http://127.0.0.1:5173'), PHP_URL_PORT) : '')
     ))),
 
     /*

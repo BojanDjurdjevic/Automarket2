@@ -1,5 +1,5 @@
 import { api } from '../api/axios';
-import type { Car, CarPayload, PaginatedCars } from '../types/car.types';
+import type { Car, PaginatedCars } from '../types/car.types';
 
 export const carService = {
 
@@ -23,8 +23,6 @@ export const carService = {
 
   async update(id: number, data: FormData) {
     data.append('_method', 'PUT');
-    console.log(data instanceof FormData);
-    console.log([...data.entries()]);
     const res = await api.post(`/api/cars/${id}`, data);
     return res.data.data;
   },

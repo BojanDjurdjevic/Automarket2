@@ -1,4 +1,5 @@
-import { api } from '../api/axios';
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
+import { api, getCsrfCooke } from '../api/axios';
 import { Toast } from '../utils/toast';
 
 export function ForgotPasswordPage(): HTMLElement {
@@ -42,13 +43,14 @@ export function ForgotPasswordPage(): HTMLElement {
 
             const email = (wrapper.querySelector('#email') as HTMLInputElement).value;
 
+            await getCsrfCooke();
             await api.post('/forgot-password', {email});
 
             Toast.success('Reset email sent');
 
-        } catch {
+        } catch (e) {
 
-            Toast.error('Failed to send reset email');
+            Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
         }
     });
 

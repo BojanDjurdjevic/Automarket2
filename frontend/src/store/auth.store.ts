@@ -2,7 +2,7 @@ type User = {
     id: number,
     name: string,
     email: string,
-    email_verified_at: boolean,
+    email_verified_at: string | null,
     phone: string | null,
     city: string | null,
     avatar: string | null

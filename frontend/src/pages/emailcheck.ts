@@ -28,7 +28,14 @@ export async function EmailCheckPage(): Promise<HTMLElement> {
       throw new Error('Missing verify url');
     }
 
-    await api.get(verifyUrl);
+    const backend = new URL(api.defaults.baseURL!, window.location.origin);
+    const verification = new URL(verifyUrl, backend);
+    if (verification.origin !== backend.origin || verification.username || verification.password ||
+        !/^\/verify-email\/\d+\/[a-f0-9]{40}$/.test(verification.pathname)) {
+      throw new Error('Invalid verification URL');
+    }
+
+    await api.get(verification.href);
 
     const freshUser = await authService.me();
 
@@ -40,7 +47,6 @@ export async function EmailCheckPage(): Promise<HTMLElement> {
 
   } catch (e) {
 
-    console.error(e);
 
     wrapper.innerHTML = `
       <div class="text-red-500">

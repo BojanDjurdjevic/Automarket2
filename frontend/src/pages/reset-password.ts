@@ -1,4 +1,5 @@
-import { api } from '../api/axios';
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
+import { api, getCsrfCooke } from '../api/axios';
 import { router } from '../main';
 import { Toast } from '../utils/toast';
 
@@ -53,6 +54,7 @@ export function ResetPasswordPage(
 
         const email = new URLSearchParams(window.location.search).get('email');
 
+        await getCsrfCooke();
         await api.post('/reset-password', {
 
           token: params?.token,
@@ -67,9 +69,9 @@ export function ResetPasswordPage(
 
         router.navigate('/login');
 
-      } catch {
+      } catch (e) {
 
-        Toast.error('Reset failed');
+        Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
       }
     });
 

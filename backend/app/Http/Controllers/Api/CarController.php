@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Filters\CarFilter;
 use App\Http\Requests\SearchCarRequest;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
@@ -30,7 +31,7 @@ class CarController extends Controller
         return CarListResource::collection($cars);
     }
 
-    public function myCars()
+    public function myCars(SearchCarRequest $request)
     {
         /*
         return CarResource::collection(
@@ -40,7 +41,7 @@ class CarController extends Controller
         ); */
 
         return CarResource::collection(
-            auth()->user()
+            (new CarFilter)->apply(auth()->user()
                 ->cars()
                 ->with([
                     'make',
@@ -48,11 +49,12 @@ class CarController extends Controller
                     'fuelType',
                     'bodyType',
                     'transmission',
+                    'features',
                     'images',
+                    'primaryImage',
                     'user'
-                ])
-                ->latest()
-                ->paginate(15)
+                ]), $request->validated())
+                ->paginate(15)->withQueryString()
         );
     }
 
@@ -63,10 +65,12 @@ class CarController extends Controller
                 ->with([
                     'make',
                     'model',
-                    'images'
+                    'fuelType',
+                    'primaryImage',
+                    'user'
                 ])
                 ->latest()
-                ->paginate(15)
+                ->paginate(15)->withQueryString()
         );
     }
 
@@ -84,6 +88,7 @@ class CarController extends Controller
             'transmission',
             'features',
             'images',
+            'primaryImage',
             'user'
         ]));
     }
@@ -98,6 +103,7 @@ class CarController extends Controller
             'transmission',
             'features',
             'images',
+            'primaryImage',
             'user'
         ]);
 

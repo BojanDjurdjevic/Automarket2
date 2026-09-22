@@ -9,7 +9,6 @@ class CarSearchService
 {
     public function search(array $filters)
     {
-        try {
             $query = Car::query()
             ->with([
                 'make',
@@ -27,10 +26,7 @@ class CarSearchService
 
             //dd($query->toSql(), $query->getBindings());
 
-            return $query->paginate(15);
-        } catch (\Throwable $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
-        }
+            return $query->paginate(15)->withQueryString();
         
     }
 }

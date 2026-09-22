@@ -1,3 +1,4 @@
+import { escapeHtml } from '../utils/helpers';
 import { profileService } from '../services/profile.service';
 import { router } from '../main';
 
@@ -42,7 +43,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
           </p>
 
           <p class="font-medium">
-            ${user.name ?? '-'}
+            ${escapeHtml(user.name ?? '-')}
           </p>
         </div>
 
@@ -54,7 +55,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
           <div class="flex items-center gap-2">
 
             <p class="font-medium">
-              ${user.email}
+              ${escapeHtml(user.email)}
             </p>
 
             ${
@@ -80,7 +81,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
           </p>
 
           <p class="font-medium">
-            ${user.phone ?? '-'}
+            ${escapeHtml(user.phone ?? '-')}
           </p>
         </div>
 
@@ -90,7 +91,7 @@ export async function ProfilePage(): Promise<HTMLElement> {
           </p>
 
           <p class="font-medium">
-            ${user.city ?? '-'}
+            ${escapeHtml(user.city ?? '-')}
           </p>
         </div>
 

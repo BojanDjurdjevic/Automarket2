@@ -20,18 +20,20 @@ class SearchCarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'make_id' => 'nullable|exists:car_makes,id',
-            'model_id' => 'nullable|exists:car_models,id',
+            'search' => 'nullable|string|max:128',
+            'page' => 'nullable|integer|min:1',
+            'make_id' => 'nullable|integer|exists:car_makes,id',
+            'model_id' => 'nullable|integer|exists:car_models,id',
 
-            'fuel_type_id' => 'nullable|exists:fuel_types,id',
-            'body_type_id' => 'nullable|exists:body_types,id',
-            'transmission_id' => 'nullable|exists:transmissions,id',
+            'fuel_type_id' => 'nullable|integer|exists:fuel_types,id',
+            'body_type_id' => 'nullable|integer|exists:body_types,id',
+            'transmission_id' => 'nullable|integer|exists:transmissions,id',
 
             'price_min' => 'nullable|integer|min:0',
-            'price_max' => 'nullable|integer|min:0',
+            'price_max' => 'nullable|integer|min:0'.($this->filled('price_min') ? '|gte:price_min' : ''),
 
             'year_min' => 'nullable|integer|min:1950|max:' . now()->year,
-            'year_max' => 'nullable|integer|min:1950|max:' . now()->year,
+            'year_max' => 'nullable|integer|min:1950|max:' . now()->year.($this->filled('year_min') ? '|gte:year_min' : ''),
 
             'mileage_max' => 'nullable|integer|min:0',
 

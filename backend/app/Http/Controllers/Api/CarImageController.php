@@ -19,7 +19,7 @@ class CarImageController
 
    public function store(StoreCarImageRequest $request, Car $car) 
     {
-        Gate::authorize('create', $car);
+        Gate::authorize('update', $car);
 
         $this->imageService->addImages($car, $request->file('images'));
 

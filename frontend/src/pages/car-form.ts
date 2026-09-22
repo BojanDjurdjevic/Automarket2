@@ -1,7 +1,7 @@
 import { carService } from '../services/car.service';
 import { metaService } from '../services/meta.service';
 import { router } from '../main';
-import type { CarPayload, Feature } from '../types/car.types';
+import type { Feature } from '../types/car.types';
 import { api } from '../api/axios';
 import { Toast } from '../utils/toast';
 import { hideLoading, showLoading } from '../ui/layouts/Overlay';
@@ -76,7 +76,6 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
   metaService.getAll().then(async meta => {
 
-    console.log('META:', meta);
 
     form.innerHTML = '';
 
@@ -85,20 +84,24 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
     const model = createSelect('model_id', []);
     make.addEventListener('change', async () => {
       const makeId = make.value;
-
-      const res = await api.get(`/api/makes/${makeId}/models`);
-
-      const models = res.data;
-
-      model.innerHTML = '';
-
-      models.forEach((m: any) => {
-        const opt = document.createElement('option');
-        opt.value = String(m.id);
-        opt.textContent = m.name;
-        model.appendChild(opt);
-      });
+      model.replaceChildren();
+      model.disabled = true;
+      try {
+        const res = await api.get(`/api/makes/${makeId}/models`);
+        if (make.value !== makeId) return;
+        res.data.forEach((m: any) => {
+          const opt = document.createElement('option');
+          opt.value = String(m.id);
+          opt.textContent = m.name;
+          model.appendChild(opt);
+        });
+      } catch (error) {
+        Toast.error(getErrorMessage(error));
+      } finally {
+        if (make.value === makeId) model.disabled = false;
+      }
     });
+    if (!isEdit && make.value) make.dispatchEvent(new Event('change'));
 
     
     const fuel = createSelect('fuel_type_id', meta.fuel_types);
@@ -132,6 +135,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
     let selectedFiles: File[] = [];
     
+    imageInput.id = 'images';
     imageInput.type = 'file';
     imageInput.multiple = true;
     imageInput.accept = 'image/*';
@@ -219,6 +223,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
     // Part III (features - check):
 
     const featuresWrapper = document.createElement('div');
+    featuresWrapper.id = 'features';
     featuresWrapper.className = 'mb-4';
 
     const featuresTitle = document.createElement('p');
@@ -285,10 +290,10 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
       // Form inputs in edit Part II:
 
-      engineSize.value = String(car.engine_size) ?? '';
+      engineSize.value = car.engine_size == null ? '' : String(car.engine_size);
       horsepower.value = car.horsepower ? String(car.horsepower) : '';
-      color.value = String(car.color) ?? '';
-      description.value = String(car.description) ?? '';
+      color.value = car.color ?? '';
+      description.value = car.description ?? '';
 
       // Part III - features:
 
@@ -307,6 +312,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
         car.images.forEach((img: any) => {
 
           const wrapper = document.createElement('div');
+          wrapper.dataset.imageId = String(img.id);
 
           wrapper.className =
             'relative rounded overflow-hidden border bg-gray-100';
@@ -356,6 +362,19 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
               await carService.deleteImage(car.id, img.id);
 
               wrapper.remove();
+              const freshCar = await carService.getOne(car.id);
+              const primary = freshCar.images.find(image => image.is_primary);
+              car.images.forEach(image => image.is_primary = image.id === primary?.id);
+              if (primary) {
+                const primaryCard = existingImages.querySelector(`[data-image-id="${primary.id}"]`);
+                if (primaryCard?.querySelector('[data-set-primary]')) {
+                  primaryCard.querySelector('[data-set-primary]')?.remove();
+                  const badge = document.createElement('div');
+                  badge.textContent = 'PRIMARY';
+                  badge.className = 'absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded';
+                  primaryCard.appendChild(badge);
+                }
+              }
 
               Toast.success('Image deleted');
 
@@ -392,6 +411,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
             const primaryBtn = document.createElement('button');
 
+            primaryBtn.dataset.setPrimary = 'true';
             primaryBtn.textContent = 'Set Primary';
 
             primaryBtn.className = 'absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded hover:bg-black';
@@ -421,7 +441,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
                     const errors = getValidationErrors(e);
 
                     Object.entries(errors).forEach(([field, messages]) => {
-                        const input = wrapper.querySelector( `#${field}`);
+                        const input = wrapper.querySelector(`#${CSS.escape(field.split('.')[0])}`);
 
                         if (input) {
                           showFieldError(
@@ -472,24 +492,17 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
       // OPTIONAL
 
-      if (engineSize.value) {
-        formData.append('engine_size', engineSize.value);
-      }
+      formData.append('engine_size', engineSize.value);
 
-      if (horsepower.value) {
-        formData.append('horsepower', horsepower.value);
-      }
+      formData.append('horsepower', horsepower.value);
 
-      if (color.value) {
-        formData.append('color', color.value);
-      }
+      formData.append('color', color.value);
 
-      if (description.value) {
-        formData.append('description', description.value);
-      }
+      formData.append('description', description.value);
 
       // FEATURES
 
+      if (!selectedFeatures.length) formData.append('features', '');
       selectedFeatures.forEach(featureId => {
         formData.append('features[]', String(featureId));
       });
@@ -506,6 +519,8 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
       } */
 
       showLoading();
+      btn.disabled = true;
+      clearFieldErrors(wrapper);
 
       try {
 
@@ -552,7 +567,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
           const errors = getValidationErrors(e);
 
           Object.entries(errors).forEach(([field, messages]) => {
-              const input = wrapper.querySelector( `#${field}`);
+              const input = wrapper.querySelector(`#${CSS.escape(field.split('.')[0])}`);
 
               if (input) {
                 showFieldError(
@@ -568,6 +583,7 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
 
         Toast.error(getErrorMessage(e));
       } finally {
+        btn.disabled = false;
         hideLoading();
       }
   });
@@ -626,6 +642,8 @@ export function CarFormPage(params?: Record<string, string>): HTMLElement {
       featuresWrapper,
       btn
     );
+  }).catch(error => {
+    form.textContent = getErrorMessage(error);
   });
 
   return wrapper;

@@ -1,3 +1,4 @@
+import { escapeHtml } from '../../utils/helpers';
 type ImageItem = {
   id: number;
   url: string;
@@ -101,7 +102,7 @@ export function ImageCarousel(images: ImageItem[]): HTMLElement {
 
             <img
             id="fullscreen-image"
-            src="${sortedImages[active].url}"
+            src="${escapeHtml(sortedImages[active].url)}"
             class="max-w-[95%] max-h-[90%] object-contain rounded-xl"
             />
 

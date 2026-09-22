@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
 
-            $frontend = env('FRONTEND_URL');
+            $frontend = rtrim(config('app.frontend_url'), '/');
             /*
             $parsed = parse_url($url);
 
@@ -54,8 +54,8 @@ class AppServiceProvider extends ServiceProvider
         }); */
 
         ResetPassword::createUrlUsing(function (object $user, string $token) {
-                return env('FRONTEND_URL')
-                    . "/reset-password/{$token}?email={$user->email}";
+                return rtrim(config('app.frontend_url'), '/')
+                    . "/reset-password/{$token}?".http_build_query(['email' => $user->email]);
             }
         );
 

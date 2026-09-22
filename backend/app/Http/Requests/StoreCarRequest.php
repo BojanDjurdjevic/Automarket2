@@ -20,7 +20,7 @@ class StoreCarRequest extends CarBaseRequest
             [
                 'features' => 'nullable|array',
 
-                'features.*' => 'exists:features,id',
+                'features.*' => 'integer|distinct|exists:features,id',
 
                 'images' => 'nullable|array|max:10',
 

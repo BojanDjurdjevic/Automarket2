@@ -17,7 +17,7 @@ Route::get('/makes/{make}/models', [CarMakeController::class, 'models']);
 
 Route::get('/users/{user}/cars', [CarController::class, 'userCars']);
 
-Route::middleware(['auth:sanctum'])->group(function() {
+Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     /*
     Route::get('/user', function (Request $request) {
         return $request->user();

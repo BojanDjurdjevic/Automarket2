@@ -5,6 +5,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
@@ -31,11 +32,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });//->middleware('auth:sanctum');
 
-    Route::get(
-        '/verify-email/{id}/{hash}',
-        VerifyEmailController::class
-    )->middleware(['signed'])->name('verification.verify');
-
     Route::get('/profile', function (Request $request) {
         return response()->json(
             $request->user()
@@ -44,9 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/profile', function (Request $request) {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:64'],
+            'phone' => ['nullable', 'string', 'max:64'],
+            'city' => ['nullable', 'string', 'max:64'],
         ]);
 
         $request->user()->update($data);
@@ -59,8 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/profile/password', function (Request $request) {
         $data = $request->validate([
-            'current_password' => ['required'],
-            'password' => ['required', 'confirmed', 'min:8'],
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'confirmed', 'min:8'],
         ]);
 
         if (!Hash::check(
@@ -76,8 +72,11 @@ Route::middleware('auth:sanctum')->group(function () {
         }
 
         $request->user()->update([
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'remember_token' => \Illuminate\Support\Str::random(60),
         ]);
+
+        $request->session()->regenerate();
 
         return response()->json([
             'message' => 'Password updated'
@@ -88,17 +87,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/profile', function (Request $request) {
         $user = $request->user();
 
-        foreach ($user->cars as $car) {
-            app(\App\Services\CarImageService::class)
-                ->deleteAllImages($car);
+        DB::transaction(function () use ($user) {
+            $cars = $user->cars()->withTrashed()->lockForUpdate()->get();
 
-            $car->delete();
-        }
+            foreach ($cars as $car) {
+                app(\App\Services\CarImageService::class)->deleteAllImages($car);
+                $car->features()->detach();
+                $car->forceDelete();
+            }
 
-        $user->delete();
+            auth()->guard('web')->logout();
+            $user->delete();
+        });
 
         //Auth::logout();
-        auth()->guard('web')->logout();
         
         $request->session()->invalidate();
 

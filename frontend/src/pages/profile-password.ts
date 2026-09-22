@@ -1,3 +1,4 @@
+import { getErrorMessage, getValidationErrors } from '../utils/api-error';
 import { profileService } from '../services/profile.service';
 import { Toast } from '../utils/toast';
 import { router } from '../main';
@@ -109,11 +110,11 @@ export function ProfilePasswordPage(): HTMLElement {
       } catch (e: any) {
 
         if (e?.response?.status === 422) {
-          Toast.error('Validation failed');
+          Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
           return;
         }
 
-        Toast.error('Update failed');
+        Toast.error(Object.values(getValidationErrors(e))[0]?.[0] || getErrorMessage(e));
       }
     });
 

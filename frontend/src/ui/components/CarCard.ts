@@ -1,3 +1,4 @@
+import { escapeHtml } from '../../utils/helpers';
 import { router } from '../../main';
 
 export function CarCard(car: any): HTMLElement {
@@ -17,8 +18,8 @@ export function CarCard(car: any): HTMLElement {
     <!-- IMAGE -->
     <div class="h-52 bg-gray-100 overflow-hidden ">
       <img
-        src="${image}"
-        alt="${car.title}"
+        src="${escapeHtml(image)}"
+        alt="${escapeHtml(car.title)}"
         class="w-full h-full object-cover hover:scale-105 transition duration-300"
       />
     </div>
@@ -29,7 +30,7 @@ export function CarCard(car: any): HTMLElement {
       <!-- TITLE -->
       <div class="flex items-start justify-between gap-2">
         <h2 class="font-semibold text-lg leading-tight">
-          ${car.title}
+          ${escapeHtml(car.title)}
         </h2>
 
         <div class="text-blue-600 font-bold whitespace-nowrap">
@@ -41,7 +42,7 @@ export function CarCard(car: any): HTMLElement {
       <div class="flex flex-wrap gap-2 mt-3 text-sm">
 
         <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
-          ${car.year}
+          ${escapeHtml(car.year)}
         </span>
 
         <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
@@ -49,21 +50,21 @@ export function CarCard(car: any): HTMLElement {
         </span>
 
         <span class="bg-gray-100 px-2 py-1 rounded  dark:bg-gray-800 dark:text-gray-100">
-          ${car.fuel_type?.name ?? 'Fuel'}
+          ${escapeHtml(car.fuel_type?.name ?? 'Fuel')}
         </span>
 
       </div>
 
       <!-- LOCATION -->
       <div class="mt-4 text-sm text-gray-500 dark:text-gray-100">
-        📍 ${car.location}
+        📍 ${escapeHtml(car.location)}
       </div>
 
       <!-- SELLER -->
       <div class="mt-3 pt-3 border-t text-sm text-gray-600 dark:text-gray-100">
         Seller:
         <span class="font-medium">
-          ${car.user?.name ?? 'Unknown'}
+          ${escapeHtml(car.user?.name ?? 'Unknown')}
         </span>
       </div>
     </div>

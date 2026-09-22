@@ -1,3 +1,4 @@
+import { getErrorMessage } from '../utils/api-error';
 import { carService } from '../services/car.service';
 import { CarCard } from '../ui/components/CarCard';
 import { Pagination } from '../ui/components/Pagination';
@@ -36,7 +37,7 @@ export function MyCarsPage(): HTMLElement {
     wrapper.querySelector('#search') as HTMLInputElement;
 
   // PAGE STATE:
-  let currentPage = 1;
+  let requestVersion = 0;
   let currentSearch = '';
 
   // RENDER
@@ -61,6 +62,8 @@ export function MyCarsPage(): HTMLElement {
 
   // LOAD
   async function loadCars(page = 1) {
+    const version = ++requestVersion;
+    try {
 
     carsContainer.innerHTML = `
       <div class="col-span-full text-center py-10">
@@ -73,6 +76,7 @@ export function MyCarsPage(): HTMLElement {
       currentSearch
     );
 
+    if (version !== requestVersion) return;
     render(res.data);
 
     // REMOVE OLD PAGINATION
@@ -92,21 +96,23 @@ export function MyCarsPage(): HTMLElement {
         lastPage: res.meta.last_page,
 
         onPageChange: (newPage) => {
-          currentPage = newPage;
           loadCars(newPage);
         }
       })
     );
 
     wrapper.appendChild(paginationWrapper);
+    } catch (error) {
+      if (version !== requestVersion) return;
+      wrapper.querySelector('#pagination')?.remove();
+      carsContainer.textContent = getErrorMessage(error);
+    }
   }
 
   // SEARCH
   searchInput.addEventListener('input', () => {
 
     currentSearch = searchInput.value.trim();
-
-    currentPage = 1;
 
     loadCars(1);
   });
